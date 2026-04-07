@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styled.css">
+    <script src="workout.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+          
+          <div class="banner">
+            <h2>DANI_BIGGS WORKOUT SESSIONS</h2>
+            <button>Explore</button>
+          </div>
+
+          <h1>💪 My Workout Tracker</h1>
+
+  <!-- DAY 1 -->
+<div class="day" onclick="toggleDay('day1')">
+    Day 1 (Chest + Shoulders + Triceps)
+</div>
+<div class="content" id="day1">
+  <div class="card">
+      <img src="Images/9f00307e64bb0b7d10fce93c27df7f3d.jpg" alt="">
+      <p>Push-ups (4 sets x 10-20 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/66afd924cb64be7619bda44298547263.jpg" alt="">
+      <p>Dumbbell floor Press (4 sets x 8-12 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/5ff195acebd26f06498e216f005e5a59.jpg" alt="">
+      <p>Dumbbell Shoulder Press (3 sets x 8-12 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/93f147ad62d7a85265d901154069f679.jpg" alt="">
+      <p>Dumbbell Lateral Raises (3 sets x 10-15 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/9382dc4eb93c02fec71492a29142dbb9.jpg" alt="">
+      <p>Overhead Triceps Extension (3 sets x 10-15 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+  <button onclick="resetDay('day1')">Reset Day</button>
+</div>
+
+<!-- DAY 2 -->
+<div class="day" onclick="toggleDay('day2')">
+    Day 2 (Back + Biceps)
+</div>
+<div class="content" id="day2">
+  <div class="card">
+      <img src="Images/319cc11c7c01b29c2f04426e09baf009.jpg" alt="">
+      <p>One Arm Dumbbell Row(4 sets x 10-12 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/fcc1e89b625247749ee652686f340c57.jpg" alt="">
+      <p>Dumbbell Deadlift (4 sets x 10-15 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/6106e9f460f2c2e8c1fd407f8e83a576.jpg" alt="">
+      <p>Dumbbell Bicep Curl (4 sets x 10-12 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+
+  <div class="card">
+      <img src="Images/844a72da6c1c5a7275270914e5699344.jpg" alt="">
+      <p>Hummer Curl (3 sets x 10-12 reps)</p>
+      <input type="checkbox" onchange="saveData()">
+  </div>
+  <button onclick="resetDay('day2')">Reset Day</button>
+</div>
+
+
+<!-- DAY 3 -->
+<div class="day" onclick="toggleDay('day3')">
+    Day 3 (Legs + Core)
+</div>
+<div class="content" id="day3">
+      <div class="card">
+          <img src="Images/e5b076804cf024a3f308e92663dc9067.jpg" alt="">
+          <p>Goblet Squats (4 sets x 10-12 reps)</p>
+          <input type="checkbox" onchange="saveData()">
+      </div>
+  
+      <div class="card">
+          <img src="Images/e96027fa3764b8559f0be64a9d197ac2.jpg" alt="">
+          <p>Dumbbell Lunges (3 sets x 10 reps)</p>
+          <input type="checkbox" onchange="saveData()">
+      </div>
+  
+      <div class="card">
+          <img src="Images/45018bc2b8ced719ec485e05b4a3b354.jpg" alt="">
+          <p>Glute Bridge (4 sets x 15 reps)</p>
+          <input type="checkbox" onchange="saveData()">
+      </div>
+  
+      <div class="card">
+          <img src="Images/639c26784270e03459a9fd465561aa04.jpg" alt="">
+          <p>Calf Raises (3 sets x 20 reps)</p>
+          <input type="checkbox" onchange="saveData()">
+      </div>
+      <button onclick="resetDay('day3')">Reset Day</button>
+    </div>
+
+      <div class="day" onclick="toggleDay('day4')">
+        Day 4 (Rest Day)
+      </div>
+      <div class="content" id="day4">
+        <p>No activities for today. Make sure to rest up</p>
+        </div>
+        
+        <div class="day" onclick="toggleDay('day5')">
+            Day 5 (Full UpperBody Workout)
+          </div>
+          <div class="content" id="day5">
+            <div class="card">
+                <img src="Images/639c26784270e03459a9fd465561aa04.jpg" alt="">
+                <p>Full UpperBody Workout (lighter versions of day 1 and day 2 combined)</p>
+                <input type="checkbox" onchange="saveData()">
+            </div>
+            <button onclick="resetDay('day5')">Reset Day</button>
+            </div>
+
+            <div class="day" onclick="toggleDay('day6')">
+                Day 6 (Legs + Fat Burn)
+              </div>
+            <div class="content" id="day6">
+                <div class="card">
+                    <img src="Images/28f55d69f23aa823e6d74e376ae3fefb.jpg" alt="">
+                    <p>Squats (4 sets x 15 reps)</p>
+                    <input type="checkbox" onchange="saveData()">
+                </div>
+
+                <div class="card">
+                    <img src="Images/e96027fa3764b8559f0be64a9d197ac2.jpg" alt="">
+                    <p>Lunges (3 sets x 12 reps)</p>
+                    <input type="checkbox" onchange="saveData()">
+                </div>
+
+                <div class="card">
+                    <img src="Images/45018bc2b8ced719ec485e05b4a3b354.jpg" alt="">
+                    <p>Glutes Bridge (4 sets x 15 reps)</p>
+                    <input type="checkbox" onchange="saveData()">
+                </div>
+
+                <div class="card">
+                    <img src="Images/151af939116e5be0a74d85b9a358d33b.jpg" alt="">
+                    <p>Jump Squats & Jogging (10-15 minutes )</p>
+                    <input type="checkbox" onchange="saveData()">
+                </div>
+                <button onclick="resetDay('day6')">Reset Day</button>
+                </div>
+
+                <div class="day" onclick="toggleDay('day7')">
+                    Day 7 (Rest Day)
+                  </div>
+                  <div class="content" id="day7">
+                    <p>No activities for today. Make sure to rest up</p>
+                    </div>
+  </div>
+    </div>
+</body>
+</html>

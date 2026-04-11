@@ -8,6 +8,35 @@
 //     }
 //   }
 
+// testimonials 
+const track  = document.getElementById('track');
+const cards  = track.querySelectorAll('.t-card');
+const dots   = document.querySelectorAll('.dot');
+let current  = 0;
+const gap    = 24;
+
+function cardW() { return cards[0].offsetWidth + gap; }
+
+function goTo(i) {
+  current = (i + cards.length) % cards.length;
+  track.style.transform = `translateX(-${current * cardW()}px)`;
+  cards.forEach((c, idx) => c.classList.toggle('active', idx === current));
+  dots.forEach((d, idx)  => d.classList.toggle('active', idx === current));
+}
+
+document.getElementById('prev').onclick = () => goTo(current - 1);
+document.getElementById('next').onclick = () => goTo(current + 1);
+dots.forEach(d => d.onclick = () => goTo(+d.dataset.i));
+
+// touch swipe support
+let startX = 0;
+track.addEventListener('touchstart', e => startX = e.touches[0].clientX, { passive: true });
+track.addEventListener('touchend',   e => {
+  const diff = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+}, { passive: true });
+
+
 // Accordion behavior (only one open at a time)
 function toggleDay(dayId) {
   const allDays = document.querySelectorAll(".content");

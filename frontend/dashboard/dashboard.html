@@ -1,41 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>dashboard - biggs fitness</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../global.css" />
+  <link rel="stylesheet" href="./dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="dashboard">
 
-  <nav class="navbar">
-    <h2>Biggs Fitness</h2>
-    <button onclick="logout()">Logout</button>
-  </nav>
+  <!--SIDEBAR-->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <!--<span class="logo-mark">B</span>-->
+      <span class="logo-label">biggs <span>fitness</span></span>
+    </div>
 
-  <section class="welcome">
-    <h1 id="welcomeText">Welcome 👋</h1>
-    <p>Let’s get you moving today.</p>
-  </section>
+    <nav class="sidebar-nav">
+      <a href="../dashboard/index.html" class="nav-item active">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="../plans/index.html" class="nav-item">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>My Plans</span>
+      </a>
+      <a href="../workout/index.html" class="nav-item">
+        <i class="fa-solid fa-dumbbell"></i>
+        <span>Workout</span>
+      </a>
+      <a href="../quick-suggestion/index.html" class="nav-item">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Quick Session</span>
+      </a>
+      <a href="../progress/index.html" class="nav-item">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Progress</span>
+      </a>
+      <a href="../profile/index.html" class="nav-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
 
-  <section class="actions">
-    <button class="btn">Start Workout</button>
-    <button class="btn">Generate Plan</button>
-    <button class="btn">No Motivation 😴</button>
-  </section>
+    <button class="sidebar-logout" id="logoutBtn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span>Log Out</span>
+    </button>
+  </aside>
 
-  <section class="stats">
-    <div class="card">Workouts this week: 0</div>
-    <div class="card">Current streak: 0 days</div>
-  </section>
+  <!--MAIN-->
+  <main class="main">
 
-  <section class="activity">
-    <h3>Recent Activity</h3>
-    <ul id="activityList">
-      <li>No workouts yet</li>
-    </ul>
-  </section>
+    <!-- top bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <p class="topbar-greeting" id="greeting">Good morning 👋</p>
+          <h2 class="topbar-name" id="userName">Loading...</h2>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-streak">
+          <i class="fa-solid fa-fire" style="color:#f97316;"></i>
+          <span id="streakCount">0</span> day streak
+        </div>
+        <a href="../profile/index.html" class="topbar-avatar" id="topbarAvatar">U</a>
+      </div>
+    </header>
 
-</div>
+    <!-- content -->
+    <div class="dash-content">
+
+      <!-- today's plan banner -->
+      <section class="today-banner" id="todayBanner">
+        <div class="today-text">
+          <p class="today-label">Today's Plan</p>
+          <h3 class="today-title" id="todayTitle">Push Day</h3>
+          <p class="today-meta" id="todayMeta">6 exercises · ~45 mins</p>
+        </div>
+        <a href="../workout/index.html" class="btn today-btn">
+          Start Workout <i class="fa-solid fa-play"></i>
+        </a>
+      </section>
+
+      <!-- stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(249,115,22,0.12); color:#f97316;">
+            <i class="fa-solid fa-fire"></i>
+          </div>
+          <div>
+            <p class="stat-label">Calories Burned</p>
+            <p class="stat-val" id="statCalories">—</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(34,197,94,0.12); color:#22c55e;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <p class="stat-label">Sessions This Week</p>
+            <p class="stat-val" id="statSessions">—</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(99,102,241,0.12); color:#818cf8;">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div>
+            <p class="stat-label">Total Mins Trained</p>
+            <p class="stat-val" id="statMins">—</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(56,189,248,0.12); color:#38bdf8;">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <div>
+            <p class="stat-label">Goals Hit</p>
+            <p class="stat-val" id="statGoals">—</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- bottom grid: weekly plan + quick actions -->
+      <div class="dash-grid">
+
+        <!-- weekly overview -->
+        <section class="week-card">
+          <div class="week-header">
+            <h4>This Week</h4>
+            <a href="../plans/index.html" class="link-sm">View full plan →</a>
+          </div>
+          <div class="week-days" id="weekDays">
+            <!-- populated by JS -->
+          </div>
+        </section>
+
+        <!-- quick actions -->
+        <section class="quick-card">
+          <h4>Quick Actions</h4>
+          <div class="quick-actions">
+            <a href="../quick-suggestion/index.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(249,115,22,0.12); color:#f97316;">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div>
+                <p class="qa-title">Quick Session</p>
+                <p class="qa-sub">Not feeling it? Get a short plan.</p>
+              </div>
+              <i class="fa-solid fa-chevron-right qa-arrow"></i>
+            </a>
+            <a href="../plans/index.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(34,197,94,0.12); color:#22c55e;">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div>
+                <p class="qa-title">Generate AI Plan</p>
+                <p class="qa-sub">Build a new weekly program.</p>
+              </div>
+              <i class="fa-solid fa-chevron-right qa-arrow"></i>
+            </a>
+            <a href="../progress/index.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(99,102,241,0.12); color:#818cf8;">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div>
+                <p class="qa-title">View Progress</p>
+                <p class="qa-sub">Track your streaks and stats.</p>
+              </div>
+              <i class="fa-solid fa-chevron-right qa-arrow"></i>
+            </a>
+            <a href="../profile/index.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(56,189,248,0.12); color:#38bdf8;">
+                <i class="fa-solid fa-user-pen"></i>
+              </div>
+              <div>
+                <p class="qa-title">Edit Profile</p>
+                <p class="qa-sub">Update goals and preferences.</p>
+              </div>
+              <i class="fa-solid fa-chevron-right qa-arrow"></i>
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../form/auth/auth.js"></script>
+  <script src="../dashboard/dashboard.js"></script>
+
 </body>
 </html>

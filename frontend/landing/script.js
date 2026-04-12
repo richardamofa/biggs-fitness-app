@@ -8,6 +8,40 @@
 //     }
 //   }
 
+// hamburger
+const hamburger = document.querySelector('.hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
+const menuLinks  = document.querySelectorAll('.mobile-menu a');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.style.overflow = 
+    mobileMenu.classList.contains('active') ? 'hidden' : '';
+});
+
+// close when a link is clicked
+menuLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+});
+
+// close when clicking outside the menu
+document.addEventListener('click', (e) => {
+  if (
+    mobileMenu.classList.contains('active') &&
+    !mobileMenu.contains(e.target) &&
+    !hamburger.contains(e.target)
+  ) {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
 // testimonials 
 const track  = document.getElementById('track');
 const cards  = track.querySelectorAll('.t-card');

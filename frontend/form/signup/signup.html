@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- fonts, icons and css links-->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+     crossorigin="anonymous" 
+     referrerpolicy="no-referrer" 
+     />
+    <link rel="stylesheet" href="./signup.css" />
+    <title>sign up - biggs fitness</title>
+</head>
+<body>
+
+<div class="scene">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="grid"></div>
+
+    <!-- floating cards -->
+    <div class="fc-plan">
+        <div class="plan-label">Your AI plan</div>
+        <div class="plan-day"><span>Mon — Push</span><span class="tag tag-done">Done</span></div>
+        <div class="plan-day"><span>Tue — Pull</span><span class="tag tag-done">Done</span></div>
+        <div class="plan-day"><span>Wed — Legs</span><span class="tag tag-next">Today</span></div>
+        <div class="plan-day"><span>Thu — Rest</span><span class="tag tag-rest">Rest</span></div>
+        <div class="plan-day"><span>Fri — Full</span><span class="tag tag-rest">Coming</span></div>
+    </div>
+
+    <div class="float-card fc-2">
+        <div class="icon" style="background:rgba(168,85,247,0.14); color:#c084fc;">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+            <div class="label">Members joined</div>
+            <div class="value">8,400+</div>
+        </div>
+    </div>
+
+    <div class="float-card fc-3">
+        <div class="icon" style="background:rgba(34,197,94,0.12); color:#22c55e;">
+            <i class="fa-solid fa-trophy"></i>
+        </div>
+        <div>
+            <div class="label">Goals crushed</div>
+            <div class="value">94% rate</div>
+        </div>
+    </div>
+
+    <div class="float-card fc-4">
+        <div class="icon" style="background:rgba(249,115,22,0.14); color:#f97316;">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+        <div>
+            <div class="label">AI-powered plans</div>
+            <div class="value">Built for you</div>
+        </div>
+    </div>
+
+    <!-- main card -->
+    <div class="card">
+        <div class="logo-row">
+            <div class="logo-text">biggs <span>fitness</span></div>
+        </div>
+
+        <h1>Start Your Journey</h1>
+        <p class="subtitle">Join thousands crushing their personal workout goals.</p>
+
+        <div class="steps">
+            <div class="step-dot active" id="s1"></div>
+            <div class="step-dot" id="s2"></div>
+            <div class="step-dot" id="s3"></div>
+        </div>
+
+        <form id="signupForm" novalidate>
+            <div class="field">
+                <label>Full name</label>
+                <div class="input-wrap">
+                    <i class="fa-regular fa-user"></i>
+                    <input type="text" id="fullname" placeholder="John Biggs" autocomplete="name" required />
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Email address</label>
+                <div class="input-wrap">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required />
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password" required />
+                    <button type="button" class="eye-toggle" id="eyeToggle">
+                      <!--<i class="fa-regular fa-eye" id="eyeIcon"></i>-->  
+                    </button>
+                </div>
+                <div class="strength-bar">
+                    <div class="strength-seg" id="seg1"></div>
+                    <div class="strength-seg" id="seg2"></div>
+                    <div class="strength-seg" id="seg3"></div>
+                    <div class="strength-seg" id="seg4"></div>
+                </div>
+                <div class="strength-label" id="strengthLabel"></div>
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="agree" />
+                <label for="agree">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+            </div>
+
+            <button type="submit" class="btn-primary" id="signupBtn">CREATE ACCOUNT</button>
+        </form>
+
+        <div class="divider">or sign up with</div>
+
+        <button class="btn-google">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <p class="footer-text">Already have an account? <a href="../login/login.html">Log in</a></p>
+    </div>
+</div>
+
+<div id="toast">
+    <div class="dot"></div>
+    <span id="toastMsg"></span>
+</div>
+
+<script>
+    // eye toggle
+    document.getElementById('eyeToggle').addEventListener('click', () => {
+        const pw = document.getElementById('password');
+        const ic = document.getElementById('eyeIcon');
+        const show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        ic.className = show ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+    });
+
+    // password strength
+    const strengthColors = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
+    const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong'];
+
+    function getStrength(pw) {
+        let score = 0;
+        if (pw.length >= 8)  score++;
+        if (/[A-Z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
+        return score;
+    }
+
+    document.getElementById('password').addEventListener('input', function () {
+        const score = getStrength(this.value);
+        const segs = ['seg1','seg2','seg3','seg4'];
+        const lbl = document.getElementById('strengthLabel');
+
+        segs.forEach((id, i) => {
+            const el = document.getElementById(id);
+            el.style.background = i < score ? strengthColors[score - 1] : 'rgba(255,255,255,0.1)';
+        });
+
+        if (this.value.length === 0) {
+            lbl.textContent = '';
+        } else {
+            lbl.textContent = strengthLabels[score - 1] || 'Weak';
+            lbl.style.color = strengthColors[score - 1] || '#ef4444';
+        }
+
+        // update step indicator
+        updateSteps(score);
+    });
+
+    // step dots
+    function updateSteps(pwScore) {
+        const name  = document.getElementById('fullname').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const s1 = document.getElementById('s1');
+        const s2 = document.getElementById('s2');
+        const s3 = document.getElementById('s3');
+
+        s1.className = 'step-dot ' + (name ? 'done' : 'active');
+        s2.className = 'step-dot ' + (email ? 'done' : name ? 'active' : '');
+        s3.className = 'step-dot ' + (pwScore >= 3 ? 'done' : email ? 'active' : '');
+    }
+
+    ['fullname','email'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const pwScore = getStrength(document.getElementById('password').value);
+            updateSteps(pwScore);
+        });
+    });
+
+    // toast helper
+    function showToast(msg, type = 'error') {
+        const toast = document.getElementById('toast');
+        toast.className = 'show ' + type;
+        document.getElementById('toastMsg').textContent = msg;
+        setTimeout(() => { toast.className = ''; }, 3800);
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../auth/auth.js"></script>
+</body>
+</html>

@@ -1,6 +1,4 @@
-const SUPABASE_URL = "https://ioyluedlmcfvayikudfd.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_Bm-mCRLQ6MBV_C-GMldd8A_QV0k70b1";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* relies on sb from supabase.js — load that first */
 
 /* Greeting based on time */
 function getGreeting() {
@@ -10,12 +8,22 @@ function getGreeting() {
     return "Good evening 👋";
 }
 
+/* Initials from name */
+function getInitials(name) {
+    return name
+        .split(" ")
+        .map(w => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+}
+
 /* Render week days */
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function renderWeek(plan) {
     const container = document.getElementById("weekDays");
-    const todayIdx = (new Date().getDay() + 6) % 7; // 0 = Mon
+    const todayIdx  = (new Date().getDay() + 6) % 7;
 
     const defaultPlan = [
         { workout: "Push Day" },
@@ -32,17 +40,17 @@ function renderWeek(plan) {
     container.innerHTML = days.map((d, i) => {
         let tag, tagClass;
         if (i < todayIdx) {
-            tag = "Done"; tagClass = "tag-done";
+            tag = "Done";   tagClass = "tag-done";
         } else if (i === todayIdx) {
-            tag = "Today"; tagClass = "tag-today";
+            tag = "Today";  tagClass = "tag-today";
         } else if (d.workout === "Rest") {
-            tag = "Rest"; tagClass = "tag-rest";
+            tag = "Rest";   tagClass = "tag-rest";
         } else {
             tag = "Coming"; tagClass = "tag-upcoming";
         }
 
         const isToday = i === todayIdx ? "today" : "";
-        const isDone  = i < todayIdx  ? "done"  : "";
+        const isDone  = i < todayIdx   ? "done"  : "";
 
         return `
             <div class="week-day-row ${isToday} ${isDone}">
@@ -54,39 +62,53 @@ function renderWeek(plan) {
     }).join("");
 }
 
-/* Load user data from Supabase */
+/* Load dashboard */
 async function loadDashboard() {
     document.getElementById("greeting").textContent = getGreeting();
 
-    const { data: { user }, error } = await sb.auth.getUser();
+    // show cached name instantly — no "Loading..." flash
+    const cachedName = localStorage.getItem("bf_user_name");
+    if (cachedName) {
+        document.getElementById("userName").textContent     = cachedName;
+        document.getElementById("topbarAvatar").textContent = getInitials(cachedName);
+    }
 
+    // verify session
+    const { data: { user } } = await sb.auth.getUser();
     if (!user) {
-        window.location.href = "../form/login/login.html";
+        window.location.href = "../form/login/index.html";
         return;
     }
 
-    // name from metadata or email fallback
-    const fullName = user.user_metadata?.full_name || user.email.split("@")[0];
-    const initials = fullName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    // update name from Supabase and keep localStorage in sync
+    const fullName =
+        user.user_metadata?.full_name ||
+        cachedName ||
+        user.email.split("@")[0];
 
-    document.getElementById("userName").textContent = fullName;
-    document.getElementById("topbarAvatar").textContent = initials;
+    localStorage.setItem("bf_user_name", fullName);
+    document.getElementById("userName").textContent     = fullName;
+    document.getElementById("topbarAvatar").textContent = getInitials(fullName);
 
-    // load stats from Supabase (sessions table)
+    // streak
+    const streak = localStorage.getItem("bf_streak") || 0;
+    document.getElementById("streakCount").textContent = streak;
+
+    // stats from sessions table
     const { data: sessions } = await sb
         .from("sessions")
         .select("duration, calories, completed_at")
         .eq("user_id", user.id);
 
     if (sessions && sessions.length > 0) {
-        const now = new Date();
+        const now       = new Date();
         const weekStart = new Date(now);
-        weekStart.setDate(now.getDate() - now.getDay());
+        weekStart.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+        weekStart.setHours(0, 0, 0, 0);
 
-        const thisWeek = sessions.filter(s => new Date(s.completed_at) >= weekStart);
-
+        const thisWeek  = sessions.filter(s => new Date(s.completed_at) >= weekStart);
         const totalCals = sessions.reduce((a, s) => a + (s.calories || 0), 0);
-        const totalMins = sessions.reduce((a, s) => a + (s.duration || 0), 0);
+        const totalMins = sessions.reduce((a, s) => a + (s.duration  || 0), 0);
 
         document.getElementById("statCalories").textContent = totalCals.toLocaleString() + " kcal";
         document.getElementById("statSessions").textContent = thisWeek.length + " / 5";
@@ -99,11 +121,7 @@ async function loadDashboard() {
         document.getElementById("statGoals").textContent    = "Get Started";
     }
 
-    // streak (stored in localStorage for now, move to DB later)
-    const streak = localStorage.getItem("bf_streak") || 0;
-    document.getElementById("streakCount").textContent = streak;
-
-    // load saved plan from Supabase (plans table)
+    // load plan
     const { data: planRow } = await sb
         .from("plans")
         .select("plan_data")
@@ -113,12 +131,12 @@ async function loadDashboard() {
         .single();
 
     if (planRow?.plan_data) {
-        const plan = planRow.plan_data;
-        renderWeek(plan.days || null);
-
-        // today's session
+        const plan     = planRow.plan_data;
         const todayIdx = (new Date().getDay() + 6) % 7;
         const todayDay = plan.days?.[todayIdx];
+
+        renderWeek(plan.days || null);
+
         if (todayDay) {
             document.getElementById("todayTitle").textContent = todayDay.workout;
             document.getElementById("todayMeta").textContent  =
@@ -130,27 +148,25 @@ async function loadDashboard() {
 }
 
 /* Sidebar toggle (mobile) */
-const sidebar  = document.getElementById("sidebar");
-const overlay  = document.getElementById("sidebarOverlay");
-const menuBtn  = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("sidebarOverlay");
+const menuBtn = document.getElementById("menuToggle");
 
-function openSidebar()  {
+menuBtn.addEventListener("click", () => {
     sidebar.classList.add("open");
     overlay.classList.add("open");
-}
-function closeSidebar() {
+});
+overlay.addEventListener("click", () => {
     sidebar.classList.remove("open");
     overlay.classList.remove("open");
-}
-
-menuBtn.addEventListener("click", openSidebar);
-overlay.addEventListener("click", closeSidebar);
+});
 
 /* Logout */
 document.getElementById("logoutBtn").addEventListener("click", async () => {
     await sb.auth.signOut();
+    localStorage.removeItem("bf_user_name");
     window.location.href = "../form/login/index.html";
 });
 
-/* Initilization */
+/* Init */
 loadDashboard();

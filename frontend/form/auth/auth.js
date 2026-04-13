@@ -1,10 +1,5 @@
-//check if auth is working in console
-//console.log("Auth JS running");
-
-const SUPABASE_URL = "https://ioyluedlmcfvayikudfd.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_Bm-mCRLQ6MBV_C-GMldd8A_QV0k70b1";
-
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* picked up bug and fixed it. now it doesn't read const twice across global*/
+/* relies on sb from supabase.js — load that first */
 
 /* Toast helper */
 function showToast(msg, type = "error") {
@@ -37,29 +32,30 @@ if (signupForm) {
         const agreed   = document.getElementById("agree")?.checked;
         const btn      = document.getElementById("signupBtn");
 
-        if (!name)   return showToast("Please enter your full name.");
-        if (!email)  return showToast("Please enter a valid email.");
+        if (!name)               return showToast("Please enter your full name.");
+        if (!email)              return showToast("Please enter a valid email.");
         if (password.length < 8) return showToast("Password must be at least 8 characters.");
-        if (!agreed) return showToast("Please agree to the terms to continue.");
+        if (!agreed)             return showToast("Please agree to the terms to continue.");
 
         setLoading(btn, true);
 
-        const { error } = await sb.auth.signUp({
+        const { data, error } = await sb.auth.signUp({
             email,
             password,
-            options: {
-                data: { full_name: name }
-            }
+            options: { data: { full_name: name } }
         });
 
         if (error) {
             showToast(error.message);
-        } else {
-            showToast("Account created! Check your email to confirm.", "success");
-            setTimeout(() => {
-                window.location.href = "../../dashboard/dashboard.html";
-            }, 2500);
+            setLoading(btn, false);
+            return;
         }
+
+        localStorage.setItem("bf_user_name", name);
+        showToast("Account created! Redirecting...", "success");
+        setTimeout(() => {
+            window.location.href = "../../dashboard/index.html";
+        }, 2000);
 
         setLoading(btn, false);
     });
@@ -80,16 +76,30 @@ if (loginForm) {
 
         setLoading(btn, true);
 
-        const { error } = await sb.auth.signInWithPassword({ email, password });
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
         if (error) {
-            showToast(error.message);
-        } else {
-            showToast("Welcome back!", "success");
-            setTimeout(() => {
-                window.location.href = "../../dashboard/dashboard.html";
-            }, 800);
+            const msg = error.message.toLowerCase();
+            if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
+                showToast("Incorrect email or password. Please try again.");
+            } else if (msg.includes("email not confirmed")) {
+                showToast("Please confirm your email before logging in.");
+            } else {
+                showToast(error.message);
+            }
+            setLoading(btn, false);
+            return;
         }
+
+        const fullName =
+            data.user?.user_metadata?.full_name ||
+            email.split("@")[0];
+
+        localStorage.setItem("bf_user_name", fullName);
+        showToast("Welcome back!", "success");
+        setTimeout(() => {
+            window.location.href = "../../dashboard/index.html";
+        }, 800);
 
         setLoading(btn, false);
     });
@@ -98,5 +108,6 @@ if (loginForm) {
 /* LOGOUT */
 async function logout() {
     await sb.auth.signOut();
-    window.location.href = "../login/login.html";
+    localStorage.removeItem("bf_user_name");
+    window.location.href = "../../form/login/index.html";
 }

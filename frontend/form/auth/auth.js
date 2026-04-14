@@ -52,7 +52,7 @@ if (signupForm) {
         }
 
         localStorage.setItem("bf_user_name", name);
-        showToast("Account created! Redirecting...", "success");
+        showToast("Account created successfully! Redirecting...", "success");
         setTimeout(() => {
             window.location.href = "../../dashboard/index.html";
         }, 2000);

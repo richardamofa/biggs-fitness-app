@@ -120,8 +120,7 @@ body {
   border-color: rgba(255,44,44,0.15);
 }
 
-/*
-   MAIN AREA */
+/*MAIN AREA */
 .main {
   margin-left: 240px;
   flex: 1;
@@ -455,8 +454,7 @@ body {
   color: rgba(240,237,232,0.25);
 }
 
-/*
-   MOBILE SIDEBAR OVERLAY */
+/*MOBILE SIDEBAR OVERLAY */
 .sidebar-overlay {
   display: none;
   position: fixed;

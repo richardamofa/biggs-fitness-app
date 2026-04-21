@@ -166,6 +166,22 @@ body {
   margin-bottom: 2px;
 }
 
+/*.wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: waveAnim 1.5s infinite;
+}
+
+@keyframes waveAnim {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(15deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(15deg); }
+  60% { transform: rotate(-5deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}*/
+
 .topbar-name {
   font-size: 1.8rem;
   font-weight: 700;

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>plans - biggs fitness</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../global.css" />
+  <link rel="stylesheet" href="./plan.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!--SIDEBAR-->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <!--<span class="logo-mark">B</span>-->
+    <span class="logo-label">biggs <span>fitness</span></span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="../dashboard/index.html" class="nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Dashboard</span>
+    </a>
+    <a href="../plan/index.html" class="nav-item active">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>My Plans</span>
+    </a>
+    <a href="../workout/index.html" class="nav-item">
+      <i class="fa-solid fa-dumbbell"></i>
+      <span>Workout</span>
+    </a>
+    <a href="../quick-suggestion/index.html" class="nav-item">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Quick Session</span>
+    </a>
+    <a href="../progress/index.html" class="nav-item">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Progress</span>
+    </a>
+    <a href="../profile/index.html" class="nav-item">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <button class="sidebar-logout" id="logoutBtn">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    <span>Log Out</span>
+  </button>
+</aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <h1>My Plans</h1>
+    <p class="sub">Choose your fitness journey</p>
+
+    <!-- CURRENT PLAN -->
+    <div id="currentPlan" class="current-plan">
+      No plan selected yet
+    </div>
+
+    <!-- PLAN CARDS -->
+    <div class="plans">
+
+      <div class="card">
+        <h3>🔥 Fat Loss</h3>
+        <p>Burn fat fast • Cardio focus • 30 min/day</p>
+        <button onclick="setPlan('Fat Loss')">Start Plan</button>
+      </div>
+
+      <div class="card">
+        <h3>💪 Muscle Gain</h3>
+        <p>Strength training • Build muscle • 5–6 days/week</p>
+        <button onclick="setPlan('Muscle Gain')">Start Plan</button>
+      </div>
+
+      <div class="card">
+        <h3>⚡ Fitness</h3>
+        <p>Balanced workouts • Strength + cardio</p>
+        <button onclick="setPlan('Fitness')">Start Plan</button>
+      </div>
+
+      <div class="card">
+        <h3>🌱 Beginner</h3>
+        <p>Easy workouts • Build consistency</p>
+        <button onclick="setPlan('Beginner')">Start Plan</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+    <script src="./plan.js"></script>
+</body>
+</html>

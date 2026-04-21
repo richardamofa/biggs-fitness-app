@@ -11,6 +11,81 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    <!--SIDEBAR-->
+   <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <!--<span class="logo-mark">B</span>-->
+      <span class="logo-label">biggs <span>fitness</span></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="../../dashboard/index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="../plan/index.html" class="nav-item">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>My Plans</span>
+      </a>
+      <a href="../workout/index.html" class="nav-item active">
+        <i class="fa-solid fa-dumbbell"></i>
+        <span>Workout</span>
+      </a>
+      <a href="../quick-suggestion/index.html" class="nav-item">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Quick Session</span>
+      </a>
+      <a href="../progress/index.html" class="nav-item">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Progress</span>
+      </a>
+      <a href="../profile/index.html" class="nav-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <button class="sidebar-logout" id="logoutBtn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span>Log Out</span>
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <p class="topbar-greeting" id="greeting">Good morning 👋</p>
+          <h2 class="topbar-name" id="userName">Loading...</h2>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-streak">
+          <i class="fa-solid fa-fire" style="color:#f97316;"></i>
+          <span id="streakCount">0</span> day streak
+        </div>
+        <a href="../profile/profile.html" class="topbar-avatar" id="topbarAvatar">U</a>
+      </div>
+    </header>
+
+    <!-- content -->
+    <div class="dash-content">
+
+      <!-- today's plan banner -->
+      <section class="today-banner" id="todayBanner">
+        <div class="today-text">
+          <p class="today-label">Today's Workout</p>
+          <h3 class="today-title" id="planText">No plan selected</h3>
+        </div>
+          <button class="btn today-btn" onclick="startWorkout()">Start Workout</button>
+      </section>
+
+  <div class="section">
+  
+    <div id="workoutArea"></div>
     
     <script src="./workout.js"></script>
 </body>

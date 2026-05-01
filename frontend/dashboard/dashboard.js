@@ -31,7 +31,7 @@ function renderWeek(plan) {
         { workout: "Leg Day" },
         { workout: "Rest" },
         { workout: "Full Body" },
-        { workout: "Cardio" },
+        { workout: "Rest" },
         { workout: "Rest" },
     ];
 
@@ -64,6 +64,7 @@ function renderWeek(plan) {
 
 /* Load dashboard */
 async function loadDashboard() {
+    await checkNewGoogleUser();
     document.getElementById("greeting").textContent = getGreeting();
 
     // show cached name instantly — no "Loading..." flash
@@ -80,8 +81,21 @@ async function loadDashboard() {
         return;
     }
 
-    // update name from Supabase and keep localStorage in sync
+    // pull all data in parallel
+    const [profileRes, progressRes, planRes] = await Promise.all([
+        sb.from("profiles").select("*").eq("user_id", user.id).maybeSingle(),
+        sb.from("progress").select("*").eq("user_id", user.id).maybeSingle(),
+        sb.from("plans").select("plan_data").eq("user_id", user.id)
+            .order("created_at", { ascending: false }).limit(1).maybeSingle()
+    ]);
+
+    const profile  = profileRes.data;
+    const progress = progressRes.data;
+    const planRow  = planRes.data;
+
+    // name
     const fullName =
+        profile?.full_name ||
         user.user_metadata?.full_name ||
         cachedName ||
         user.email.split("@")[0];
@@ -90,46 +104,43 @@ async function loadDashboard() {
     document.getElementById("userName").textContent     = fullName;
     document.getElementById("topbarAvatar").textContent = getInitials(fullName);
 
-    // streak
-    const streak = localStorage.getItem("bf_streak") || 0;
-    document.getElementById("streakCount").textContent = streak;
+    // streak — from Supabase, not localStorage
+    document.getElementById("streakCount").textContent = progress?.streak || 0;
 
-    // stats from sessions table
+    // stats — from progress table
+    document.getElementById("statCalories").textContent =
+        progress?.total_calories
+            ? progress.total_calories.toLocaleString() + " kcal"
+            : "0 kcal";
+
+    document.getElementById("statMins").textContent =
+        progress?.total_mins
+            ? progress.total_mins + " mins"
+            : "0 mins";
+
+    // sessions this week — still from sessions table for accuracy
     const { data: sessions } = await sb
         .from("sessions")
-        .select("duration, calories, completed_at")
+        .select("completed_at")
         .eq("user_id", user.id);
 
     if (sessions && sessions.length > 0) {
-        const now       = new Date();
-        const weekStart = new Date(now);
-        weekStart.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+        const weekStart = new Date();
+        weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
         weekStart.setHours(0, 0, 0, 0);
 
-        const thisWeek  = sessions.filter(s => new Date(s.completed_at) >= weekStart);
-        const totalCals = sessions.reduce((a, s) => a + (s.calories || 0), 0);
-        const totalMins = sessions.reduce((a, s) => a + (s.duration  || 0), 0);
+        const thisWeek = sessions.filter(s => new Date(s.completed_at) >= weekStart);
+        const target   = profile?.days_per_week || 4;
 
-        document.getElementById("statCalories").textContent = totalCals.toLocaleString() + " kcal";
-        document.getElementById("statSessions").textContent = thisWeek.length + " / 5";
-        document.getElementById("statMins").textContent     = totalMins + " mins";
-        document.getElementById("statGoals").textContent    = thisWeek.length >= 3 ? "On Track ✓" : "Keep Going";
+        document.getElementById("statSessions").textContent = `${thisWeek.length} / ${target}`;
+        document.getElementById("statGoals").textContent    =
+            thisWeek.length >= Math.ceil(target / 2) ? "On Track ✓" : "Keep Going";
     } else {
-        document.getElementById("statCalories").textContent = "0 kcal";
-        document.getElementById("statSessions").textContent = "0 / 5";
-        document.getElementById("statMins").textContent     = "0 mins";
+        document.getElementById("statSessions").textContent = `0 / ${profile?.days_per_week || 4}`;
         document.getElementById("statGoals").textContent    = "Get Started";
     }
 
-    // load plan
-    const { data: planRow } = await sb
-        .from("plans")
-        .select("plan_data")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
-
+    // weekly plan
     if (planRow?.plan_data) {
         const plan     = planRow.plan_data;
         const todayIdx = (new Date().getDay() + 6) % 7;
@@ -138,9 +149,25 @@ async function loadDashboard() {
         renderWeek(plan.days || null);
 
         if (todayDay) {
+            const isRest = todayDay.workout?.toLowerCase().includes("rest");
+
             document.getElementById("todayTitle").textContent = todayDay.workout;
-            document.getElementById("todayMeta").textContent  =
-                `${todayDay.exercises || 6} exercises · ~${todayDay.duration || 45} mins`;
+            document.getElementById("todayMeta").textContent  = isRest
+                ? "Take it easy today. Recovery matters."
+                : `${todayDay.exercises || 6} exercises · ~${todayDay.duration || 45} mins`;
+
+            // disable start button on rest days
+            const startBtn = document.getElementById("todayStartBtn");
+            if (startBtn) {
+                if (isRest) {
+                    startBtn.textContent         = "Rest Day 🛌";
+                    startBtn.style.pointerEvents = "none";
+                    startBtn.style.opacity       = "0.4";
+                    startBtn.removeAttribute("href");
+                } else {
+                    startBtn.href = `../workout/index.html?workout=${encodeURIComponent(todayDay.workout)}&day=${todayIdx}`;
+                }
+            }
         }
     } else {
         renderWeek(null);
@@ -167,6 +194,39 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
     localStorage.removeItem("bf_user_name");
     window.location.href = "../form/login/index.html";
 });
+
+/* Handle new Google sign-in users */
+async function checkNewGoogleUser() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await sb
+        .from('profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+    if (!profile) {
+        const name = user.user_metadata?.full_name || user.email.split('@')[0];
+        await sb.from('profiles').insert({
+            user_id:       user.id,
+            full_name:     name,
+            fitness_level: 'beginner',
+            goal:          'stay active',
+            equipment:     'none',
+            days_per_week: 4
+        });
+        await sb.from('progress').insert({
+            user_id:        user.id,
+            streak:         0,
+            longest_streak: 0,
+            total_sessions: 0,
+            total_mins:     0,
+            total_calories: 0
+        });
+        localStorage.setItem('bf_user_name', name);
+    }
+}
 
 /* Init */
 loadDashboard();

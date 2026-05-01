@@ -347,6 +347,13 @@ body {
   margin-bottom: 2rem;
 }
 
+.today-btn[style*="pointer-events: none"] {
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.08);
+    box-shadow: none;
+    color: rgba(240,237,232,0.4);
+}
+
 .week-header h4,
 .quick-card h4 {
   font-size: 1.5rem;

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quick Session — biggs fitness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../global.css" />
+  <link rel="stylesheet" href="../../dashboard/dashboard.css" />
+  <link rel="stylesheet" href="./quick.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <!--<span class="logo-mark">B</span>-->
+      <span class="logo-label">biggs <span>fitness</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="../../dashboard/index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+      <a href="../plans/index.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>My Plans</span></a>
+      <a href="../workout/index.html" class="nav-item"><i class="fa-solid fa-dumbbell"></i><span>Workout</span></a>
+      <a href="../quick-suggestion/index.html" class="nav-item active"><i class="fa-solid fa-bolt"></i><span>Quick Session</span></a>
+      <a href="../progress/index.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Progress</span></a>
+      <a href="../profile/index.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    </nav>
+    <button class="sidebar-logout" id="logoutBtn">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Log Out</span>
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <p class="topbar-greeting">Not feeling it? That's okay.</p>
+          <h2 class="topbar-name">Quick Session</h2>
+        </div>
+      </div>
+      <a href="../profile/index.html" class="topbar-avatar" id="topbarAvatar"></a>
+    </header>
+
+    <div class="page-content">
+
+      <!-- intro -->
+      <section class="qs-intro" id="sessionIntro">
+        <div class="qs-intro-icon">⚡</div>
+        <h3>No motivation? No problem.</h3>
+        <p>Hit the button and we'll give you a short 10–15 min session. Just show up.</p>
+        <button class="btn qs-generate-btn" id="generateBtn" onclick="generateQuickSession()">
+          <i class="fa-solid fa-bolt"></i> Get My Quick Session
+        </button>
+        <p class="qs-error" id="sessionError" style="display:none;"></p>
+      </section>
+
+      <!-- session renders here -->
+      <section id="sessionContainer"></section>
+
+    </div>
+  </main>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  <script src="../../form/supabase/supabase.js"></script>
+  <script src="./quick.js"></script>
+</body>
+</html>

@@ -194,7 +194,7 @@
             <div class="t-user">
               <div class="t-avatar" style="background:#9e951d;">JS</div>
               <div>
-                <div class="t-name">James Smith</div>
+                <div class="t-name">Jude Dela</div>
                 <div class="t-role">New Member — 3 months</div>
               </div>
             </div>
@@ -209,8 +209,8 @@
             <div class="t-user">
               <div class="t-avatar" style="background:#1D9E75;">AK</div>
               <div>
-                <div class="t-name">Amara Kwesi</div>
-                <div class="t-role">Elite Member — 1 year</div>
+                <div class="t-name">Ben Charles</div>
+                <div class="t-role">Pro Member —  2 months</div>
               </div>
             </div>
           </div>
@@ -476,23 +476,50 @@
   <script src="./script.js"></script>
   <script>
     /*Contact form handler*/
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const note = document.getElementById('contactNote');
+
+      const note    = document.getElementById('contactNote');
       const name    = document.getElementById('c-name').value.trim();
       const email   = document.getElementById('c-email').value.trim();
+      const subject = document.getElementById('c-subject').value.trim();
       const message = document.getElementById('c-message').value.trim();
+      const btn     = this.querySelector('.contact-btn');
 
       if (!name || !email || !message) {
-        note.textContent = 'Please fill in your name, email and message.';
-        note.style.color = '#ff2c2c';
-        return;
+          note.textContent = 'Please fill in your name, email and message.';
+          note.style.color = '#ff2c2c';
+          return;
       }
 
-      note.textContent = "Message sent! We'll get back to you within 24 hours.";
-      note.style.color = '#22c55e';
-      this.reset();
-    });
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      try {
+          const res = await fetch('http://localhost:3000/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, email, subject, message })
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+              note.textContent = "Message sent! We'll get back to you within 24 hours.";
+              note.style.color = '#22c55e';
+              this.reset();
+          } else {
+              note.textContent = data.error || 'Something went wrong.';
+              note.style.color = '#ff2c2c';
+          }
+      } catch {
+          note.textContent = 'Could not send message. Try again later.';
+          note.style.color = '#ff2c2c';
+      }
+
+      btn.innerHTML = 'Send Message <i class="fa-solid fa-paper-plane"></i>';
+      btn.disabled = false;
+  });
   </script>
 
 </body>

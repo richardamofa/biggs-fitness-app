@@ -1,0 +1,152 @@
+/* ── Progress page ── */
+
+.page-content {
+    padding: 3.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+}
+
+/* stat grid */
+.progress-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.progress-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 2rem 2.4rem;
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+}
+
+.pstat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    flex-shrink: 0;
+}
+
+.pstat-label {
+    font-size: 1.1rem;
+    color: rgba(240,237,232,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.pstat-val {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #f0ede8;
+    line-height: 1;
+}
+
+/* history section */
+.history-section {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 2.8rem;
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.4rem;
+}
+
+.history-header h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #f0ede8;
+}
+
+.history-sub {
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.35);
+}
+
+.session-history {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.history-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: 1.6rem 2rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+}
+
+.history-card:hover { border-color: rgba(255,44,44,0.2); }
+
+.history-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #f0ede8;
+    margin-bottom: 4px;
+}
+
+.history-date {
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.4);
+}
+
+.history-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-shrink: 0;
+}
+
+.history-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.45);
+}
+
+.history-stat i { color: rgba(255,44,44,0.6); }
+
+/* empty */
+.empty-history {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-history p {
+    font-size: 1.4rem;
+    color: rgba(240,237,232,0.35);
+}
+
+@media (max-width: 1024px) { .progress-stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 860px) {
+    .page-content { padding: 2rem; }
+    .history-card { flex-direction: column; align-items: flex-start; }
+    .history-right { flex-wrap: wrap; gap: 1.2rem; }
+}
+@media (max-width: 500px) {
+    .progress-stat-grid { grid-template-columns: 1fr; }
+    .history-section { padding: 2rem; }
+}

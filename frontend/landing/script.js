@@ -91,6 +91,7 @@ function toggleDay(dayId) {
 }
 
 // Save checkbox states
+/*
 function saveData() {
   const checkboxes = document.querySelectorAll("input[type='checkbox']");
   let data = [];
@@ -124,4 +125,4 @@ function resetDay(dayId) {
 }
 
 // Load when page opens
-window.onload = loadData;
+window.onload = loadData;*/

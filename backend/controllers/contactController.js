@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-/* ── Save contact message ── */
+/* Save contact message */
 export async function saveContact(req, res) {
     const { name, email, subject, message } = req.body;
 

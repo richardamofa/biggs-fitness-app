@@ -38,7 +38,6 @@ if (signupForm) {
 
         setLoading(btn, true);
 
-        // create auth user
         const { data, error } = await sb.auth.signUp({
             email,
             password,
@@ -54,36 +53,32 @@ if (signupForm) {
         const userId = data.user.id;
 
         // create profile row
-        const { error: profileError } = await sb.from("profiles").insert({
-            user_id: userId,
-            full_name: name,
+        await sb.from("profiles").insert({
+            user_id:       userId,
+            full_name:     name,
             fitness_level: "beginner",
-            goal: "stay active",
-            equipment: "none",
-            days_per_week: 3
+            goal:          "stay active",
+            equipment:     "none",
+            days_per_week: 4
         });
 
-        if (profileError) console.error("Profile creation failed:", profileError.message);
-
         // create progress row
-        const { error: progressError } = await sb.from("progress").insert({
-            user_id: userId,
-            streak: 0,
+        await sb.from("progress").insert({
+            user_id:        userId,
+            streak:         0,
             longest_streak: 0,
             total_sessions: 0,
-            total_mins: 0,
+            total_mins:     0,
             total_calories: 0
         });
 
-        if (progressError) console.error("Progress creation failed:", progressError.message);
-
-        // cache name for instant dashboard display
         localStorage.setItem("bf_user_name", name);
+        showToast("Account created! Setting up your profile...", "success");
 
-        showToast("Account created successfully! Redirecting...", "success");
+        // go to onboarding — not dashboard
         setTimeout(() => {
-            window.location.href = "../../dashboard/index.html";
-        }, 2000);
+            window.location.href = "../../onboarding/index.html";
+        }, 1500);
 
         setLoading(btn, false);
     });
@@ -119,14 +114,13 @@ if (loginForm) {
             return;
         }
 
-        // cache name for instant dashboard display
         const fullName =
             data.user?.user_metadata?.full_name ||
             email.split("@")[0];
 
         localStorage.setItem("bf_user_name", fullName);
-
         showToast("Welcome back!", "success");
+
         setTimeout(() => {
             window.location.href = "../../dashboard/index.html";
         }, 800);
@@ -140,14 +134,12 @@ async function signInWithGoogle() {
     const { error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'http://127.0.0.1:5500/dashboard/index.html'
-            // actual frontend URL
-            // on Netlify/Vercel it would be: https://yoursite.netlify.app/dashboard/index.html
+            redirectTo: 'http://127.0.0.1:5500/frontend/dashboard/index.html'
+            // update this when you deploy to Netlify/Vercel
         }
     });
     if (error) showToast(error.message);
 }
-
 
 /* LOGOUT */
 async function logout() {

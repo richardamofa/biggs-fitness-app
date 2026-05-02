@@ -1,0 +1,408 @@
+/* ── Coaches page ── */
+
+.page-content {
+    padding: 3.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.8rem;
+}
+
+/* ── Banner ── */
+.coaches-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3.2rem;
+    padding: 3.2rem 3.6rem;
+    background: linear-gradient(135deg, rgba(255,44,44,0.1) 0%, rgba(251,146,60,0.06) 100%);
+    border: 1px solid rgba(255,44,44,0.18);
+    border-radius: 16px;
+    flex-wrap: wrap;
+}
+
+.coaches-banner-text h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #f0ede8;
+    margin-bottom: 8px;
+}
+
+.coaches-banner-text p {
+    font-size: 1.4rem;
+    color: rgba(240,237,232,0.5);
+    max-width: 480px;
+    line-height: 1.7;
+}
+
+.coaches-banner-stats {
+    display: flex;
+    gap: 3.2rem;
+    flex-shrink: 0;
+}
+
+.banner-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.banner-stat span {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #f0ede8;
+    line-height: 1;
+}
+
+.banner-stat p {
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* ── Filter tabs ── */
+.coaches-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.8rem 1.8rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    color: rgba(240,237,232,0.55);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: rgba(255,44,44,0.08);
+    border-color: rgba(255,44,44,0.25);
+    color: #f0ede8;
+}
+
+.filter-btn.active {
+    background: rgba(255,44,44,0.12);
+    border-color: #ff2c2c;
+    color: #ff2c2c;
+}
+
+/* ── Coaches grid ── */
+.coaches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+/* ── Coach card ── */
+.coach-card {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+}
+
+.coach-card:hover {
+    border-color: rgba(255,44,44,0.25);
+    transform: translateY(-4px);
+}
+
+.coach-card.hidden { display: none; }
+
+.coach-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    color: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+}
+
+.coach-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.coach-body {
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    flex: 1;
+}
+
+.coach-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.2rem;
+}
+
+.coach-name {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #f0ede8;
+}
+
+.coach-title {
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.4);
+    margin-top: 3px;
+}
+
+.coach-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #f0ede8;
+    flex-shrink: 0;
+}
+
+.coach-rating i { color: #f59e0b; font-size: 1.2rem; }
+
+.coach-bio {
+    font-size: 1.35rem;
+    color: rgba(240,237,232,0.45);
+    line-height: 1.7;
+}
+
+.coach-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.coach-tag {
+    font-size: 1.1rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,44,44,0.1);
+    border: 1px solid rgba(255,44,44,0.2);
+    color: #ff2c2c;
+    font-weight: 500;
+}
+
+.coach-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.coach-price {
+    font-size: 1.3rem;
+    color: rgba(240,237,232,0.4);
+}
+
+.coach-price strong {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f0ede8;
+}
+
+.coach-book-btn {
+    padding: 0.9rem 2rem;
+    background: #ff2c2c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.coach-book-btn:hover {
+    background: #e02020;
+    transform: translateY(-1px);
+}
+
+/* ── Booking modal ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 3.6rem;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+
+.modal-overlay.open .modal {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+    background: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(240,237,232,0.5);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255,44,44,0.1);
+    color: #ff2c2c;
+}
+
+.modal-coach-info {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin-bottom: 2.8rem;
+    padding-bottom: 2.4rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.modal-coach-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff2c2c, #fb923c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.modal-coach-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-coach-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f0ede8;
+}
+
+.modal-coach-title {
+    font-size: 1.3rem;
+    color: rgba(240,237,232,0.4);
+    margin-top: 3px;
+}
+
+.modal-options h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f0ede8;
+    margin-bottom: 1.6rem;
+}
+
+.modal-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.modal-contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 1.4rem 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color: #f0ede8;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.modal-contact-btn:hover {
+    background: rgba(255,44,44,0.08);
+    border-color: rgba(255,44,44,0.25);
+}
+
+.modal-contact-btn .mc-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.mc-icon.whatsapp { background: rgba(37,211,102,0.12); color: #25d366; }
+.mc-icon.email    { background: rgba(255,44,44,0.12);  color: #ff2c2c; }
+.mc-icon.call     { background: rgba(56,189,248,0.12); color: #38bdf8; }
+
+.modal-contact-btn .mc-text p { font-size: 1.1rem; color: rgba(240,237,232,0.4); margin-top: 2px; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+    .coaches-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 860px) {
+    .page-content { padding: 2rem; }
+    .coaches-banner { flex-direction: column; align-items: flex-start; padding: 2.4rem; }
+    .coaches-banner-stats { gap: 2rem; }
+}
+
+@media (max-width: 600px) {
+    .coaches-grid { grid-template-columns: 1fr; }
+    .modal { padding: 2.4rem; }
+}

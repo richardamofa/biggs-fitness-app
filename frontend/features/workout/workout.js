@@ -257,6 +257,8 @@ async function finishWorkout() {
 
     // show completion screen
     showCompletionScreen(duration, calories);
+
+    localStorage.setItem("bf_last_workout_date", new Date().toDateString());
 }
 
 /* Completion screen */

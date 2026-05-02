@@ -261,6 +261,26 @@ if (overlay) {
     });
 }
 
+/* Offline fallback helper */
+async function fetchWithFallback(url, options, cacheKey) {
+    if (!navigator.onLine) {
+        const cached = localStorage.getItem(cacheKey);
+        return cached ? JSON.parse(cached) : null;
+    }
+
+    try {
+        const res  = await fetch(url, options);
+        const data = await res.json();
+        // cache it for next time
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        return data;
+    } catch {
+        // backend down — try cache
+        const cached = localStorage.getItem(cacheKey);
+        return cached ? JSON.parse(cached) : null;
+    }
+}
+
 /* Logout */
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {

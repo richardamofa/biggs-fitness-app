@@ -121,13 +121,17 @@ async function generatePlan() {
     btn.disabled    = true;
 
     try {
-        const res = await fetch("http://localhost:3000/api/ai/generate-plan", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fitness_level, goal, equipment, days_per_week })
-        });
+        const data = await fetchWithFallback(
+            "http://localhost:3000/api/ai/generate-plan",
+            { method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fitness_level, goal, equipment, days_per_week }) },
+            "bf_cached_plan"
+        );
 
-        const data = await res.json();
+        if (!data) {
+            showNotification("You're offline. Please check your connection.", "error");
+            return;
+        }
 
         if (!res.ok) {
             showNotification(data.error || "Failed to generate plan.", "error");
@@ -217,6 +221,26 @@ if (overlay) {
         sidebar.classList.remove("open");
         overlay.classList.remove("open");
     });
+}
+
+/* Offline fallback helper */
+async function fetchWithFallback(url, options, cacheKey) {
+    if (!navigator.onLine) {
+        const cached = localStorage.getItem(cacheKey);
+        return cached ? JSON.parse(cached) : null;
+    }
+
+    try {
+        const res  = await fetch(url, options);
+        const data = await res.json();
+        // cache it for next time
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        return data;
+    } catch {
+        // backend down — try cache
+        const cached = localStorage.getItem(cacheKey);
+        return cached ? JSON.parse(cached) : null;
+    }
 }
 
 /* Logout */

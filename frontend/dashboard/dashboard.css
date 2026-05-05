@@ -547,3 +547,123 @@ body {
 
   .topbar-streak { display: none; }
 }
+
+/* Screen notice */
+.screen-notice {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    padding: 1.2rem 2rem;
+    background: rgba(249,115,22,0.08);
+    border-bottom: 1px solid rgba(249,115,22,0.2);
+    font-size: 1.3rem;
+    color: #f0ede8;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+}
+ 
+.screen-notice button {
+    background: none;
+    border: none;
+    color: rgba(240,237,232,0.5);
+    font-size: 1.8rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    line-height: 1;
+}
+ 
+/* Install banner */
+.install-banner {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 48px);
+    max-width: 480px;
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 1.6rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    z-index: 400;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) both;
+}
+ 
+@keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+ 
+.install-banner-left {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex: 1;
+    min-width: 0;
+}
+ 
+.install-banner-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff2c2c, #fb923c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+}
+ 
+.install-banner-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #f0ede8;
+}
+ 
+.install-banner-sub {
+    font-size: 1.2rem;
+    color: rgba(240,237,232,0.4);
+    margin-top: 2px;
+}
+ 
+.install-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+ 
+.install-btn {
+    padding: 0.8rem 1.8rem;
+    background: #ff2c2c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+ 
+.install-btn:hover { background: #e02020; }
+ 
+.install-dismiss {
+    background: none;
+    border: none;
+    color: rgba(240,237,232,0.4);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+ 
+.install-dismiss:hover { color: #f0ede8; }

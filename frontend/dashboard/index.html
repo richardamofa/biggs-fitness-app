@@ -3,14 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <!--title-->
   <title>Dashboard — biggs fitness</title>
 
+  <!--css and font links-->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../global.css" />
   <link rel="stylesheet" href="./dashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#ff2c2c" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <!-- Apple / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="biggs fitness" />
+  <link rel="apple-touch-icon" href="/frontend/assets/icons/icon-192.png" />
 </head>
 <body>
+
+  <!-- Screen size notice -->
+  <div class="screen-notice" id="screenNotice" style="display:none;">
+    <span>💻 For the best experience, open Biggs Fitness on a wider screen.</span>
+    <button onclick="dismissScreenNotice()">✕</button>
+  </div>
+  
+  <!-- PWA install banner -->
+  <div class="install-banner" id="installBanner" style="display:none;">
+    <div class="install-banner-left">
+      <div class="install-banner-icon">B</div>
+      <div>
+        <p class="install-banner-title">Install Biggs Fitness</p>
+        <p class="install-banner-sub">Add to your home screen for quick access</p>
+      </div>
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-btn" onclick="installApp()">Install</button>
+      <button class="install-dismiss" onclick="dismissInstallBanner()">✕</button>
+    </div>
+  </div>
 
   <!--SIDEBAR-->
   <aside class="sidebar" id="sidebar">
@@ -209,8 +244,10 @@
   <script src="../form/supabase/supabase.js"></script>
   <script src="./dashboard.js"></script>
 
+  <script src="./pwa-install.js"></script>
+
   <!--script for notification-->
-  <script src="./notifications.js"></script>
+  <script src="./notification.js"></script>
 
 </body>
 </html>

@@ -102,6 +102,19 @@ async function generatePlan() {
     const days_per_week = parseInt(document.getElementById("daysPerWeek")?.value);
     const btn           = document.getElementById("generateBtn");
 
+    const { plan } = await getUserPlan();
+ 
+    // Starter: enforce 1 plan per month cap
+    if (plan === "starter") {
+        const { withinLimit, used, limit } = await checkMonthlyLimit(currentUser.id, "generate_plan");
+        if (!withinLimit) {
+            showUpgradeModal("pro", "Unlimited Plan Generation");
+            return;
+        }
+    }
+
+    // onboarding selections not chosen?
+
     if (!fitness_level || !goal || !equipment || !days_per_week) {
         showNotification("Please fill in all fields.", "error");
         return;
@@ -120,40 +133,40 @@ async function generatePlan() {
     btn.textContent = "Generating...";
     btn.disabled    = true;
 
-    try {
-        const data = await fetchWithFallback(
-            "http://localhost:3000/api/ai/generate-plan",
-            { method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fitness_level, goal, equipment, days_per_week }) },
-            "bf_cached_plan"
-        );
+    const data = await fetchWithFallback(
+        "http://localhost:3000/api/ai/generate-plan",
+        {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ fitness_level, goal, equipment, days_per_week })
+        },
+        "bf_cached_plan"
+    );
 
-        if (!data) {
-            showNotification("You're offline. Please check your connection.", "error");
-            return;
-        }
-
-        if (!res.ok) {
-            showNotification(data.error || "Failed to generate plan.", "error");
-            return;
-        }
-
-        // save plan to Supabase
-        await sb.from("plans").insert({
-            user_id:   currentUser.id,
-            plan_data: data.plan
-        });
-
-        renderPlan(data.plan, new Date().toISOString());
-        showNotification("Plan generated and saved!", "success");
-
-    } catch (err) {
-        console.error("generatePlan error:", err);
-        showNotification("Could not reach server. Is your backend running?", "error");
-    } finally {
+    if (!data) {
+        showNotification("Could not reach server. Check your connection.", "error");
         btn.textContent = "Generate New Plan";
         btn.disabled    = false;
+        return;
     }
+
+    if (data.error) {
+        showNotification(data.error, "error");
+        btn.textContent = "Generate New Plan";
+        btn.disabled    = false;
+        return;
+    }
+
+    await sb.from("plans").insert({
+        user_id:   currentUser.id,
+        plan_data: data.plan
+    });
+
+    renderPlan(data.plan, new Date().toISOString());
+    showNotification("Plan generated and saved!", "success");
+
+    btn.textContent = "Generate New Plan";
+    btn.disabled    = false;
 }
 
 /* Render plan to UI */
@@ -168,11 +181,17 @@ function renderPlan(plan, createdAt) {
     if (empty) empty.style.display = "none";
 
     const date = new Date(createdAt).toLocaleDateString("en-GB", {
-        day: "numeric", month: "short", year: "numeric"
+        day: "numeric", month: "long", year: "numeric"
     });
 
     container.innerHTML = `
-        <div class="plan-header">...</div>
+        <div class="plan-header">
+            <div>
+                <h3 class="plan-title">Your Weekly Plan</h3>
+                <p class="plan-date">Generated ${date}</p>
+            </div>
+            <button class="btn-outline" onclick="generatePlan()">Regenerate</button>
+        </div>
         <div class="plan-days">
             ${plan.days.map((d, i) => {
                 const isRest = d.workout.toLowerCase().includes("rest");

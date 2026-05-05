@@ -1,6 +1,6 @@
 /* relies on sb from supabase.js — load that first */
 
-/* ── State ── */
+/*  State  */
 let currentStep  = 1;
 const totalSteps = 4;
 
@@ -11,7 +11,7 @@ const answers = {
     days_per_week: null
 };
 
-/* ── Select option ── */
+/*  Select option  */
 function selectOption(el, key) {
     const screen = el.closest(".ob-screen");
     screen.querySelectorAll(".ob-option").forEach(o => o.classList.remove("selected"));
@@ -20,7 +20,7 @@ function selectOption(el, key) {
     document.getElementById("nextBtn").disabled = false;
 }
 
-/* ── Next step ── */
+/*  Next step  */
 async function nextStep() {
     if (currentStep < totalSteps) {
         goToStep(currentStep + 1);
@@ -29,12 +29,12 @@ async function nextStep() {
     }
 }
 
-/* ── Prev step ── */
+/*  Prev step  */
 function prevStep() {
     if (currentStep > 1) goToStep(currentStep - 1);
 }
 
-/* ── Navigate to step ── */
+/*  Navigate to step  */
 function goToStep(step) {
     document.getElementById(`screen-${currentStep}`).classList.remove("active");
     document.getElementById(`step-${currentStep}`).classList.remove("active");
@@ -56,7 +56,7 @@ function goToStep(step) {
     nextBtn.disabled = !answers[key];
 }
 
-/* ── Save profile + auto-generate plan + redirect ── */
+/*  Save profile + auto-generate plan + redirect  */
 async function saveAndFinish() {
     const btn  = document.getElementById("nextBtn");
     const note = document.getElementById("obNote");
@@ -121,7 +121,7 @@ async function saveAndFinish() {
     }, 800);
 }
 
-/* ── Error helper ── */
+/*  Error helper  */
 function showNote(msg) {
     const note = document.getElementById("obNote");
     if (!note) return;
@@ -130,7 +130,7 @@ function showNote(msg) {
     note.style.display = "block";
 }
 
-/* ── Init — check session ── */
+/*  Init — check session  */
 async function initOnboarding() {
     const { data: { user } } = await sb.auth.getUser();
 

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <title>biggs fitness.com</title>
 
   <!-- Font -->
@@ -19,6 +20,18 @@
    crossorigin="anonymous" 
    referrerpolicy="no-referrer" 
   />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#ff2c2c" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <!-- Apple / iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="biggs fitness" />
+  <link rel="apple-touch-icon" href="/frontend/assets/icons/icon-192.png" />
+
 </head>
 <body>
 
@@ -208,7 +221,7 @@
             <div class="t-user">
               <div class="t-avatar" style="background:#1D9E75;">AK</div>
               <div>
-                <div class="t-name">Ben Charles</div>
+                <div class="t-name">Prince Appiah</div>
                 <div class="t-role">Pro Member —  2 months</div>
               </div>
             </div>
@@ -242,6 +255,7 @@
   </section>
 
   <!-- PRICING -->
+<!-- PRICING -->
   <section class="section pricing" id="pricing">
     <div class="container">
 
@@ -262,12 +276,13 @@
             <span class="period"></span>
           </div>
           <ul class="plan-features">
-            <li>Personalized home workout plans</li>
-            <li>Train with or without equipment</li>
-            <li>Basic progress tracking</li>
-            <li>Access to beginner programs</li>
+            <li>1 AI plan generation per month</li>
+            <li>Basic workout logging</li>
+            <li>Progress tracking</li>
+            <li>Quick session (limited to 3/month)</li>
+            <li>No coach access</li>
           </ul>
-          <a href="#" class="btn btn-outline w-full">Start Now</a>
+          <a href="../form/signup/index.html" class="btn btn-outline w-full">Start Now</a>
         </div>
 
         <!-- PRO -->
@@ -283,13 +298,14 @@
             <span class="period">/month</span>
           </div>
           <ul class="plan-features">
-            <li>Everything in Starter</li>
-            <li>Advanced progress tracking & insights</li>
-            <li>Weekly performance reports</li>
-            <li>Access to all workout programs</li>
+            <li>Unlimited AI plan generation</li>
+            <li>Unlimited quick sessions</li>
+            <li>Advanced progress insights</li>
+            <li>Weekly performance summary</li>
             <li>Priority support</li>
+            <li>Coach directory access (view only)</li>
           </ul>
-          <a href="#" class="btn btn-primary w-full">Start Now</a>
+          <button class="btn btn-primary w-full" onclick="handlePlanClick('pro', 3900)">Start Now</button>
         </div>
 
         <!-- ELITE -->
@@ -310,12 +326,138 @@
             <li>Personalized nutrition guidance</li>
             <li>Real-time trainer feedback</li>
           </ul>
-          <a href="#" class="btn btn-outline w-full">Start Now</a>
+          <button class="btn btn-outline w-full" onclick="handlePlanClick('elite', 5900)">Start Now</button>
         </div>
 
       </div>
     </div>
   </section>
+
+  <!-- Payment status toast -->
+  <div id="paymentToast" style="
+    display: none;
+    position: fixed;
+    bottom: 2.4rem;
+    right: 2.4rem;
+    background: #1a1a1a;
+    color: #f0ede8;
+    padding: 1.4rem 2rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    font-family: Poppins, sans-serif;
+    z-index: 9999;
+    border-left: 4px solid #ff2c2c;
+    max-width: 32rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  "></div>
+
+  <!-- Paystack inline script  -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+
+  <script>
+    const PAYSTACK_PUBLIC_KEY = "pk_test_83a771cba48462ebca51aee8b8469284d2019eae";
+    const BACKEND_URL         = "http://localhost:3000";
+
+    /* Show toast notification */
+    function showPaymentToast(msg, success = true) {
+      const toast = document.getElementById("paymentToast");
+      toast.textContent    = msg;
+      toast.style.display  = "block";
+      toast.style.borderLeftColor = success ? "#22c55e" : "#ff2c2c";
+      setTimeout(() => { toast.style.display = "none"; }, 5000);
+    }
+
+    /* Called when Pro or Elite button is clicked */
+    async function handlePlanClick(plan, amountInPesewas) {
+      // Check if user is logged in via Supabase
+      const { data: { user } } = await sb.auth.getUser();
+
+      if (!user) {
+        // Not logged in — send to signup, store intended plan so we can redirect back
+        sessionStorage.setItem("bf_intended_plan", plan);
+        sessionStorage.setItem("bf_intended_amount", amountInPesewas);
+        window.location.href = "../form/signup/index.html";
+        return;
+      }
+
+      openPaystackPopup(user, plan, amountInPesewas);
+    }
+
+    /* Open Paystack payment popup */
+    function openPaystackPopup(user, plan, amountInPesewas) {
+      const handler = PaystackPop.setup({
+        key:       PAYSTACK_PUBLIC_KEY,
+        email:     user.email,
+        amount:    amountInPesewas,  // in pesewas (GH₵ 39 = 3900 pesewas)
+        currency:  "GHS",
+        ref:       "BF-" + Date.now() + "-" + Math.floor(Math.random() * 1000000),
+        label:     "biggs fitness — " + plan.charAt(0).toUpperCase() + plan.slice(1),
+        metadata: {
+          custom_fields: [
+            { display_name: "Plan",    variable_name: "plan",    value: plan },
+            { display_name: "User ID", variable_name: "user_id", value: user.id }
+          ]
+        },
+
+        onClose: function () {
+          showPaymentToast("Payment cancelled.", false);
+        },
+
+        callback: async function (response) {
+          showPaymentToast("Verifying payment…", true);
+
+          try {
+            const res = await fetch(`${BACKEND_URL}/api/payment/verify`, {
+              method:  "POST",
+              headers: { "Content-Type": "application/json" },
+              body:    JSON.stringify({
+                reference: response.reference,
+                user_id:   user.id,
+                plan:      plan
+              })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+              showPaymentToast(`🎉 Welcome to ${plan.charAt(0).toUpperCase() + plan.slice(1)}! Redirecting…`, true);
+              // Small delay so user sees the success message
+              setTimeout(() => {
+                window.location.href = "../dashboard/index.html";
+              }, 2000);
+            } else {
+              showPaymentToast(data.error || "Verification failed. Contact support.", false);
+            }
+
+          } catch (err) {
+            console.error("Payment verify error:", err);
+            showPaymentToast("Server error. Please contact support with ref: " + response.reference, false);
+          }
+        }
+      });
+
+      handler.openIframe();
+    }
+
+    /* If user just signed up after clicking a plan, pick up where they left off */
+    (async function checkIntendedPlan() {
+      const plan   = sessionStorage.getItem("bf_intended_plan");
+      const amount = sessionStorage.getItem("bf_intended_amount");
+      if (!plan || !amount) return;
+
+      const { data: { user } } = await sb.auth.getUser();
+      if (!user) return;
+
+      // Clear so it doesn't fire again
+      sessionStorage.removeItem("bf_intended_plan");
+      sessionStorage.removeItem("bf_intended_amount");
+
+      // Small delay to let the page settle
+      setTimeout(() => {
+        openPaystackPopup(user, plan, parseInt(amount));
+      }, 800);
+    })();
+  </script>
 
   <!-- CONTACT -->
   <section class="section contact" id="contact">
@@ -359,7 +501,7 @@
             </div>
             <div>
               <h4>Email</h4>
-              <p><a href="mailto:hello@biggsfitness.com">hello@biggsfitness.com</a></p>
+              <p><a href="mailto:biggsdevs@gmail.com">biggsdevs@gmail.com</a></p>
             </div>
           </div>
 
@@ -439,8 +581,8 @@
             <h4>Programs</h4>
             <ul>
               <li><a href="#">Advanced Sessions and Equipments</a></li>
-              <li><a href="#">Personal Fitness Training</a></li>
-              <li><a href="#">Fitness Membership</a></li>
+              <li><a href="../features/coaches/index.html">Personal Fitness Training</a></li>
+              <li><a href="https://chat.whatsapp.com/EKXPWkSeqRkA6gLYA1F3SY">Fitness Membership</a></li>
             </ul>
           </div>
           <div class="footer-col">
@@ -448,7 +590,7 @@
             <ul>
               <li><a href="#">Accra, Ghana</a></li>
               <li><a href="tel:+233000000000">+233 00 000 0000</a></li>
-              <li><a href="mailto:hello@biggsfitness.com">hello@biggsfitness.com</a></li>
+              <li><a href="mailto:biggsdevs@gmail.com">biggsdevs@gmail.com</a></li>
             </ul>
           </div>
         </div>
@@ -472,7 +614,9 @@
     </div>
   </footer>
 
+
   <script src="./script.js"></script>
+    <script src="../shared/checkPlan.js"></script>
   <script>
     /*Contact form handler*/
   document.getElementById('contactForm').addEventListener('submit', async function (e) {

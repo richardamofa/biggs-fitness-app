@@ -45,6 +45,17 @@ async function initQuickSession() {
 async function generateQuickSession() {
     const btn = document.getElementById("generateBtn");
 
+    const { plan } = await getUserPlan();
+ 
+    // Starter: enforce 3 quick sessions per month cap
+    if (plan === "starter") {
+        const { withinLimit, used, limit } = await checkMonthlyLimit(currentUser.id, "quick_session");
+        if (!withinLimit) {
+            showUpgradeModal("pro", "Unlimited Quick Sessions");
+            return;
+        }
+    }
+
     btn.textContent = "Getting your session...";
     btn.disabled    = true;
 

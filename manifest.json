@@ -1,0 +1,65 @@
+{
+  "name": "Biggs Fitness",
+  "short_name": "Biggs",
+  "description": "AI-powered fitness tracking, workout plans and 1-on-1 coaching.",
+  "start_url": "/frontend/dashboard/index.html",
+  "scope": "/frontend/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e0e0e",
+  "theme_color": "#ff2c2c",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    {
+      "src": "/frontend/assets/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/frontend/assets/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/frontend/assets/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/frontend/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/frontend/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Home",
+      "url": "/frontend/dashboard/index.html",
+      "icons": [{ "src": "/frontend/assets/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Quick Session",
+      "short_name": "Quick",
+      "url": "/frontend/features/quick-suggestion/index.html",
+      "icons": [{ "src": "/frontend/assets/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "My Plans",
+      "short_name": "Plans",
+      "url": "/frontend/features/plans/index.html",
+      "icons": [{ "src": "/frontend/assets/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}

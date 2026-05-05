@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>Offline — Biggs Fitness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0e0e0e;
+      color: #f0ede8;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      max-width: 400px;
+    }
+
+    .logo-mark {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ff2c2c, #fb923c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .icon { font-size: 5.6rem; }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #f0ede8;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: rgba(240,237,232,0.45);
+      line-height: 1.7;
+    }
+
+    .tip {
+      background: #111111;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 2rem 2.4rem;
+      text-align: left;
+      width: 100%;
+    }
+
+    .tip h4 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #f0ede8;
+      margin-bottom: 1.2rem;
+    }
+
+    .tip ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .tip li {
+      font-size: 1.3rem;
+      color: rgba(240,237,232,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tip li::before {
+      content: "→";
+      color: #ff2c2c;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .btn-retry {
+      padding: 1.3rem 3.2rem;
+      background: #ff2c2c;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-retry:hover {
+      background: #e02020;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo-mark">B</div>
+    <div class="icon">📶</div>
+    <h1>You're Offline</h1>
+    <p>No internet connection right now. Some pages are still available from cache.</p>
+
+    <div class="tip">
+      <h4>While you're offline you can still:</h4>
+      <ul>
+        <li>View your cached workout plan</li>
+        <li>Check your progress stats</li>
+        <li>Browse the exercises list</li>
+        <li>Review your coach contacts</li>
+      </ul>
+    </div>
+
+    <button class="btn-retry" onclick="window.location.reload()">
+      Try Again
+    </button>
+  </div>
+</body>
+</html>

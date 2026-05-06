@@ -1,4 +1,4 @@
-/* ── Register service worker ── */
+/* Register service worker */
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker
@@ -8,7 +8,7 @@ if ("serviceWorker" in navigator) {
     });
 }
  
-/* ── PWA install prompt ── */
+/* PWA install prompt */
 let deferredPrompt = null;
  
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -54,7 +54,7 @@ window.addEventListener("appinstalled", () => {
     console.log("Biggs Fitness installed successfully");
 });
  
-/* ── Screen size notice ── */
+/* Screen size notice */
 function checkScreenSize() {
     const notice = document.getElementById("screenNotice");
     if (!notice) return;

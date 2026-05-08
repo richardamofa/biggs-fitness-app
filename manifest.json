@@ -1,7 +1,7 @@
 {
-  "name": "Biggs Fitness",
-  "short_name": "Biggs",
-  "description": "AI-powered fitness tracking, workout plans and 1-on-1 coaching.",
+  "name": "biggs fitness",
+  "short_name": "biggs",
+  "description": "Simple AI-powered fitness tracking, workout plans and 1-on-1 coaching.",
   "start_url": "/frontend/dashboard/index.html",
   "scope": "/frontend/",
   "display": "standalone",

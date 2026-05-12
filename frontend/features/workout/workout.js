@@ -83,55 +83,122 @@ function getDefaultExercises(workoutName) {
     const name = workoutName?.toLowerCase() || "";
 
     if (name.includes("push")) return [
-        { name: "Push Ups",          sets: 4, reps: "12",     rest: "45s" },
-        { name: "Dumbbell Press",    sets: 4, reps: "10",     rest: "60s" },
-        { name: "Shoulder Press",    sets: 3, reps: "10",     rest: "60s" },
-        { name: "Tricep Dips",       sets: 3, reps: "12",     rest: "45s" },
-        { name: "Lateral Raises",    sets: 3, reps: "12",     rest: "45s" },
-        { name: "Chest Fly",         sets: 3, reps: "12",     rest: "45s" }
+        { name: "Push Ups",          sets: 4, reps: "12",      rest: "45s" },
+        { name: "Dumbbell Press",    sets: 4, reps: "10",      rest: "60s" },
+        { name: "Shoulder Press",    sets: 3, reps: "10",      rest: "60s" },
+        { name: "Tricep Dips",       sets: 3, reps: "12",      rest: "45s" },
+        { name: "Lateral Raises",    sets: 3, reps: "12",      rest: "45s" },
+        { name: "Chest Fly",         sets: 3, reps: "12",      rest: "45s" }
     ];
 
     if (name.includes("pull")) return [
-        { name: "Pull Ups",          sets: 4, reps: "8",      rest: "60s" },
-        { name: "Bent Over Row",     sets: 4, reps: "10",     rest: "60s" },
-        { name: "Bicep Curls",       sets: 3, reps: "12",     rest: "45s" },
-        { name: "Face Pulls",        sets: 3, reps: "15",     rest: "45s" },
-        { name: "Hammer Curls",      sets: 3, reps: "12",     rest: "45s" },
-        { name: "Shrugs",            sets: 3, reps: "15",     rest: "45s" }
+        { name: "Pull Ups",          sets: 4, reps: "8",       rest: "60s" },
+        { name: "Bent Over Row",     sets: 4, reps: "10",      rest: "60s" },
+        { name: "Bicep Curls",       sets: 3, reps: "12",      rest: "45s" },
+        { name: "Face Pulls",        sets: 3, reps: "15",      rest: "45s" },
+        { name: "Hammer Curls",      sets: 3, reps: "12",      rest: "45s" },
+        { name: "Shrugs",            sets: 3, reps: "15",      rest: "45s" }
     ];
 
-    if (name.includes("leg")) return [
-        { name: "Squats",            sets: 4, reps: "12",     rest: "60s" },
-        { name: "Lunges",            sets: 3, reps: "10 each",rest: "45s" },
-        { name: "Leg Press",         sets: 4, reps: "10",     rest: "60s" },
-        { name: "Calf Raises",       sets: 4, reps: "15",     rest: "30s" },
-        { name: "Hamstring Curls",   sets: 3, reps: "12",     rest: "45s" },
-        { name: "Glute Bridges",     sets: 3, reps: "15",     rest: "45s" }
+    if (name.includes("leg") || name.includes("lower")) return [
+        { name: "Squats",            sets: 4, reps: "12",      rest: "60s" },
+        { name: "Lunges",            sets: 3, reps: "10 each", rest: "45s" },
+        { name: "Leg Press",         sets: 4, reps: "10",      rest: "60s" },
+        { name: "Calf Raises",       sets: 4, reps: "15",      rest: "30s" },
+        { name: "Hamstring Curls",   sets: 3, reps: "12",      rest: "45s" },
+        { name: "Glute Bridges",     sets: 3, reps: "15",      rest: "45s" }
+    ];
+
+    if (name.includes("upper")) return [
+        { name: "Push Ups",          sets: 4, reps: "12",      rest: "45s" },
+        { name: "Pull Ups",          sets: 3, reps: "8",       rest: "60s" },
+        { name: "Shoulder Press",    sets: 3, reps: "10",      rest: "60s" },
+        { name: "Bent Over Row",     sets: 3, reps: "10",      rest: "60s" },
+        { name: "Bicep Curls",       sets: 3, reps: "12",      rest: "45s" },
+        { name: "Tricep Dips",       sets: 3, reps: "12",      rest: "45s" }
     ];
 
     if (name.includes("cardio")) return [
-        { name: "Jumping Jacks",     sets: 3, reps: "30 sec", rest: "30s" },
-        { name: "High Knees",        sets: 3, reps: "30 sec", rest: "30s" },
-        { name: "Burpees",           sets: 3, reps: "10",     rest: "45s" },
-        { name: "Mountain Climbers", sets: 3, reps: "20",     rest: "30s" },
-        { name: "Jump Rope",         sets: 3, reps: "1 min",  rest: "30s" }
+        { name: "Jumping Jacks",     sets: 3, reps: "30 sec",  rest: "30s" },
+        { name: "High Knees",        sets: 3, reps: "30 sec",  rest: "30s" },
+        { name: "Burpees",           sets: 3, reps: "10",      rest: "45s" },
+        { name: "Mountain Climbers", sets: 3, reps: "20",      rest: "30s" },
+        { name: "Jump Rope",         sets: 3, reps: "1 min",   rest: "30s" }
     ];
 
-    if (name.includes("full")) return [
-        { name: "Push Ups",          sets: 3, reps: "12",     rest: "45s" },
-        { name: "Squats",            sets: 3, reps: "12",     rest: "45s" },
-        { name: "Bent Over Row",     sets: 3, reps: "10",     rest: "60s" },
-        { name: "Lunges",            sets: 3, reps: "10 each",rest: "45s" },
-        { name: "Plank",             sets: 3, reps: "45 sec", rest: "30s" },
-        { name: "Jumping Jacks",     sets: 3, reps: "30 sec", rest: "30s" }
+    if (name.includes("full") || name.includes("body")) return [
+        { name: "Push Ups",          sets: 3, reps: "12",      rest: "45s" },
+        { name: "Squats",            sets: 3, reps: "12",      rest: "45s" },
+        { name: "Bent Over Row",     sets: 3, reps: "10",      rest: "60s" },
+        { name: "Lunges",            sets: 3, reps: "10 each", rest: "45s" },
+        { name: "Plank",             sets: 3, reps: "45 sec",  rest: "30s" },
+        { name: "Jumping Jacks",     sets: 3, reps: "30 sec",  rest: "30s" }
     ];
 
-    // fallback
+    if (name.includes("chest")) return [
+        { name: "Push Ups",          sets: 4, reps: "15",      rest: "45s" },
+        { name: "Dumbbell Press",    sets: 4, reps: "10",      rest: "60s" },
+        { name: "Chest Fly",         sets: 3, reps: "12",      rest: "45s" },
+        { name: "Incline Press",     sets: 3, reps: "10",      rest: "60s" },
+        { name: "Tricep Dips",       sets: 3, reps: "10",      rest: "45s" }
+    ];
+
+    if (name.includes("back")) return [
+        { name: "Pull Ups",          sets: 4, reps: "8",       rest: "60s" },
+        { name: "Bent Over Row",     sets: 4, reps: "10",      rest: "60s" },
+        { name: "Lat Pulldown",      sets: 3, reps: "12",      rest: "60s" },
+        { name: "Face Pulls",        sets: 3, reps: "15",      rest: "45s" },
+        { name: "Deadlift",          sets: 3, reps: "8",       rest: "90s" }
+    ];
+
+    if (name.includes("shoulder") || name.includes("delt")) return [
+        { name: "Shoulder Press",    sets: 4, reps: "10",      rest: "60s" },
+        { name: "Lateral Raises",    sets: 3, reps: "12",      rest: "45s" },
+        { name: "Front Raises",      sets: 3, reps: "12",      rest: "45s" },
+        { name: "Face Pulls",        sets: 3, reps: "15",      rest: "45s" },
+        { name: "Upright Row",       sets: 3, reps: "12",      rest: "45s" }
+    ];
+
+    if (name.includes("arm") || name.includes("bicep") || name.includes("tricep")) return [
+        { name: "Bicep Curls",       sets: 4, reps: "12",      rest: "45s" },
+        { name: "Tricep Dips",       sets: 4, reps: "12",      rest: "45s" },
+        { name: "Hammer Curls",      sets: 3, reps: "12",      rest: "45s" },
+        { name: "Skull Crushers",    sets: 3, reps: "10",      rest: "45s" },
+        { name: "Concentration Curls", sets: 3, reps: "12",   rest: "45s" }
+    ];
+
+    if (name.includes("hiit")) return [
+        { name: "Burpees",           sets: 4, reps: "10",      rest: "20s" },
+        { name: "Jump Squats",       sets: 4, reps: "15",      rest: "20s" },
+        { name: "Mountain Climbers", sets: 4, reps: "20",      rest: "20s" },
+        { name: "High Knees",        sets: 4, reps: "30 sec",  rest: "20s" },
+        { name: "Box Jumps",         sets: 3, reps: "10",      rest: "30s" }
+    ];
+
+    if (name.includes("core") || name.includes("ab")) return [
+        { name: "Plank",             sets: 4, reps: "45 sec",  rest: "30s" },
+        { name: "Crunches",          sets: 3, reps: "20",      rest: "30s" },
+        { name: "Leg Raises",        sets: 3, reps: "15",      rest: "30s" },
+        { name: "Russian Twists",    sets: 3, reps: "20",      rest: "30s" },
+        { name: "Mountain Climbers", sets: 3, reps: "20",      rest: "30s" }
+    ];
+
+    if (name.includes("glute") || name.includes("hip")) return [
+        { name: "Glute Bridges",     sets: 4, reps: "15",      rest: "30s" },
+        { name: "Hip Thrusts",       sets: 4, reps: "12",      rest: "45s" },
+        { name: "Sumo Squats",       sets: 3, reps: "12",      rest: "45s" },
+        { name: "Donkey Kicks",      sets: 3, reps: "15 each", rest: "30s" },
+        { name: "Fire Hydrants",     sets: 3, reps: "15 each", rest: "30s" }
+    ];
+
+    if (name.includes("rest")) return [];
+
+    // fallback - should something not read!
     return [
-        { name: "Warm Up Walk",      sets: 1, reps: "5 min",  rest: "0s"  },
-        { name: "Bodyweight Squats", sets: 3, reps: "15",     rest: "45s" },
-        { name: "Push Ups",          sets: 3, reps: "10",     rest: "45s" },
-        { name: "Plank",             sets: 3, reps: "30 sec", rest: "30s" }
+        { name: "Warm Up Walk",      sets: 1, reps: "5 min",   rest: "0s"  },
+        { name: "Bodyweight Squats", sets: 3, reps: "15",      rest: "45s" },
+        { name: "Push Ups",          sets: 3, reps: "10",      rest: "45s" },
+        { name: "Plank",             sets: 3, reps: "30 sec",  rest: "30s" }
     ];
 }
 

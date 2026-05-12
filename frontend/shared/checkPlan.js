@@ -1,6 +1,33 @@
 /*checkPlan.js — biggs fitness plan gating 
 Load AFTER supabase.js on any feature page. */
 
+// free access list — user IDs here
+const FREE_ACCESS = [
+    "f111610a-ee2d-4852-8fa5-9fb50640a54d"
+];
+
+async function getUserPlan() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return "starter";
+
+    // bypass payment for these users
+    if (FREE_ACCESS.includes(user.id)) return "elite";
+
+    const { data: profile } = await sb
+        .from("profiles")
+        .select("plan, plan_expires_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    // check if plan is expired
+    if (profile?.plan_expires_at) {
+        const expired = new Date(profile.plan_expires_at) < new Date();
+        if (expired) return "starter";
+    }
+
+    return profile?.plan || "starter";
+}
+
 /* Plan hierarchy */
 const PLAN_RANK = { starter: 0, pro: 1, elite: 2 };
 

@@ -237,7 +237,7 @@ async function finishQuickSession() {
                     </div>
                 </div>
                 <div class="completion-actions">
-                    <a href="../dashboard/index.html" class="btn">Back to Dashboard</a>
+                    <a href="../../dashboard/index.html" class="btn">Back to Dashboard</a>
                     <button class="btn btn-outline" onclick="location.reload()">Do Another</button>
                 </div>
             </div>

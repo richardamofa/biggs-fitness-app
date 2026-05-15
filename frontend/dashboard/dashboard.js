@@ -90,7 +90,7 @@ function updateTodayBanner(days) {
         startBtn.textContent         = "Start Workout →";
         startBtn.style.pointerEvents = "";
         startBtn.style.opacity       = "";
-        startBtn.href = `../workout/index.html?workout=${encodeURIComponent(todayDay.workout)}&day=${todayIdx}`;
+        startBtn.href = `../features/workout/index.html?workout=${encodeURIComponent(todayDay.workout)}&day=${todayIdx}`;
     }
 }
 

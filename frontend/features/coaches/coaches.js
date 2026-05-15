@@ -10,11 +10,11 @@
     }
 })();
 
-/*  Coach data — update with real coaches later  */
+/*  Coach data  */
 const COACHES = [
     {
         id: 1,
-        name: "Kwame Asante",
+        name: "Dwayne Ofori",
         title: "Strength & Conditioning Coach",
         bio: "6 years helping clients build serious strength from home or gym. Specialises in progressive overload and body recomposition.",
         tags: ["muscle gain", "beginner"],
@@ -22,14 +22,14 @@ const COACHES = [
         reviews: 84,
         price: "GH₵ 120",
         period: "/month",
-        emoji: "💪",
-        whatsapp: "233XXXXXXXXX",
+        photo: "../../assets/coaches/coach2.png",
+        whatsapp: "233200854407",
         email: "kwame@biggsfitness.com",
-        phone: "+233 XX XXX XXXX"
+        phone: "+233 20 085 4407"
     },
     {
         id: 2,
-        name: "Ama Serwaa",
+        name: "King Nasir Congo Version",
         title: "Fat Loss & HIIT Specialist",
         bio: "Certified personal trainer focused on sustainable fat loss. Creates high-energy plans that fit into busy schedules.",
         tags: ["weight loss", "endurance"],
@@ -37,7 +37,7 @@ const COACHES = [
         reviews: 61,
         price: "GH₵ 100",
         period: "/month",
-        emoji: "🔥",
+        photo: "../../assets/coaches/coach9.png",
         whatsapp: "233XXXXXXXXX",
         email: "ama@biggsfitness.com",
         phone: "+233 XX XXX XXXX"
@@ -52,7 +52,7 @@ const COACHES = [
         reviews: 45,
         price: "GH₵ 90",
         period: "/month",
-        emoji: "🏃",
+        photo: "../../assets/coaches/coach3.png",
         whatsapp: "233XXXXXXXXX",
         email: "kofi@biggsfitness.com",
         phone: "+233 XX XXX XXXX"
@@ -67,14 +67,14 @@ const COACHES = [
         reviews: 38,
         price: "GH₵ 80",
         period: "/month",
-        emoji: "🌱",
+        photo: "../../assets/coaches/coach5.png",
         whatsapp: "233XXXXXXXXX",
         email: "abena@biggsfitness.com",
         phone: "+233 XX XXX XXXX"
     },
     {
         id: 5,
-        name: "Yaw Darko",
+        name: "Famous Diddy",
         title: "Muscle & Hypertrophy Coach",
         bio: "Bodybuilding competitor with 8 years of coaching. Writes detailed programs focused on muscle growth and aesthetics.",
         tags: ["muscle gain"],
@@ -82,7 +82,7 @@ const COACHES = [
         reviews: 72,
         price: "GH₵ 140",
         period: "/month",
-        emoji: "🏋️",
+        photo: "../../assets/coaches/coach8.png",
         whatsapp: "233XXXXXXXXX",
         email: "yaw@biggsfitness.com",
         phone: "+233 XX XXX XXXX"
@@ -97,12 +97,28 @@ const COACHES = [
         reviews: 53,
         price: "GH₵ 110",
         period: "/month",
-        emoji: "🧘",
+        photo: "../../assets/coaches/coach7.png",
         whatsapp: "233XXXXXXXXX",
         email: "efua@biggsfitness.com",
         phone: "+233 XX XXX XXXX"
     }
 ];
+
+/* Initials fallback when photo fails to load */
+function initialsAvatar(name) {
+    const initials = name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    return `<span class="coach-initials">${initials}</span>`;
+}
+
+function coachImgHTML(coach) {
+    return `
+        <img
+            src="${coach.photo}"
+            alt="${coach.name}"
+            onerror="this.style.display='none'; this.parentElement.innerHTML += '${initialsAvatar(coach.name).replace(/'/g, "\\'")}'"
+        />
+    `;
+}
 
 /*  Render coaches  */
 function renderCoaches(coaches) {
@@ -112,9 +128,7 @@ function renderCoaches(coaches) {
     grid.innerHTML = coaches.map(c => `
         <div class="coach-card" data-tags="${c.tags.join(",")}" data-id="${c.id}">
             <div class="coach-img">
-                ${c.photo
-                    ? `<img src="${c.photo}" alt="${c.name}" />`
-                    : `<span>${c.emoji}</span>`}
+                ${coachImgHTML(c)}
             </div>
             <div class="coach-body">
                 <div class="coach-top">
@@ -147,12 +161,10 @@ function renderCoaches(coaches) {
 
 /*  Filter coaches  */
 function filterCoaches(tag, btn) {
-    // update active button
     document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    const cards = document.querySelectorAll(".coach-card");
-    cards.forEach(card => {
+    document.querySelectorAll(".coach-card").forEach(card => {
         const tags = card.dataset.tags;
         if (tag === "all" || tags.includes(tag)) {
             card.classList.remove("hidden");
@@ -164,16 +176,16 @@ function filterCoaches(tag, btn) {
 
 /*  Open booking modal  */
 function openModal(coachId) {
-    const coach   = COACHES.find(c => c.id === coachId);
+    const coach = COACHES.find(c => c.id === coachId);
     if (!coach) return;
 
     const infoEl = document.getElementById("modalCoachInfo");
     const btnsEl = document.getElementById("modalBtns");
 
     infoEl.innerHTML = `
-        <div class="modal-coach-avatar">${coach.photo
-            ? `<img src="${coach.photo}" alt="${coach.name}" />`
-            : coach.emoji}</div>
+        <div class="modal-coach-avatar">
+            ${coachImgHTML(coach)}
+        </div>
         <div>
             <p class="modal-coach-name">${coach.name}</p>
             <p class="modal-coach-title">${coach.title}</p>
@@ -214,7 +226,6 @@ function closeModal() {
     document.getElementById("modalOverlay").classList.remove("open");
 }
 
-/* close modal on Escape key */
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeModal();
 });
@@ -250,24 +261,20 @@ if (logoutBtn) {
 /*  Init  */
 async function initCoaches() {
     const { allowed, plan } = await canAccess("coach_directory");
- 
+
     if (!allowed) {
-        // Starter — block the whole page
         showUpgradeModal("pro", "Coach Directory");
-        // Optionally blur/hide the coach grid
         const grid = document.getElementById("coachGrid");
         if (grid) grid.style.filter = "blur(6px) brightness(0.4)";
         return;
     }
- 
-    // Pro: hide booking buttons, show view-only badge
+
     if (plan === "pro") {
-        // After coaches render, disable booking buttons
         document.querySelectorAll(".book-btn").forEach(btn => {
             btn.textContent = "Elite Only";
-            btn.disabled    = true;
-            btn.style.opacity   = "0.5";
-            btn.style.cursor    = "not-allowed";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
             btn.onclick = (e) => {
                 e.preventDefault();
                 showUpgradeModal("elite", "1-on-1 Coach Booking");
@@ -280,6 +287,7 @@ async function initCoaches() {
         window.location.href = "../../form/login/index.html";
         return;
     }
+
     renderCoaches(COACHES);
 }
 

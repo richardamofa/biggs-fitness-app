@@ -193,7 +193,7 @@ function getDefaultExercises(workoutName) {
 
     if (name.includes("rest")) return [];
 
-    // fallback - should something not read!
+    // fallback 
     return [
         { name: "Warm Up Walk",      sets: 1, reps: "5 min",   rest: "0s"  },
         { name: "Bodyweight Squats", sets: 3, reps: "15",      rest: "45s" },
@@ -353,7 +353,7 @@ function showCompletionScreen(duration, calories) {
                 </div>
             </div>
             <div class="completion-actions">
-                <a href="../dashboard/index.html" class="btn">Back to Dashboard</a>
+                <a href="../../dashboard/index.html" class="btn">Back to Dashboard</a>
                 <a href="../progress/index.html" class="btn btn-outline">View Progress</a>
             </div>
         </div>

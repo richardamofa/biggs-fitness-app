@@ -339,7 +339,7 @@
     position: fixed;
     bottom: 2.4rem;
     right: 2.4rem;
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.82);
     color: #f0ede8;
     padding: 1.4rem 2rem;
     border-radius: 1rem;
@@ -518,108 +518,231 @@
   <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <script>
-    const PAYSTACK_PUBLIC_KEY = "pk_test_83a771cba48462ebca51aee8b8469284d2019eae";
-    const BACKEND_URL         = "http://localhost:3000";
+  const PAYSTACK_PUBLIC_KEY = "pk_test_83a771cba48462ebca51aee8b8469284d2019eae";
+  const BACKEND_URL = "http://localhost:3000";
 
-    /* Show toast notification */
-    function showPaymentToast(msg, success = true) {
+  /* Show toast notification */
+  function showPaymentToast(msg, success = true) {
+
       const toast = document.getElementById("paymentToast");
-      toast.textContent    = msg;
-      toast.style.display  = "block";
+
+      toast.textContent = msg;
+      toast.style.display = "block";
       toast.style.borderLeftColor = success ? "#22c55e" : "#ff2c2c";
-      setTimeout(() => { toast.style.display = "none"; }, 5000);
-    }
 
-    /* Called when Pro or Elite button is clicked */
-    async function handlePlanClick(plan, amountInPesewas) {
-      // Check if user is logged in via Supabase
-      const { data: { user } } = await sb.auth.getUser();
+      setTimeout(() => {
+          toast.style.display = "none";
+      }, 5000);
+  }
 
-      if (!user) {
-        // Not logged in — send to signup, store intended plan so we can redirect back
-        sessionStorage.setItem("bf_intended_plan", plan);
-        sessionStorage.setItem("bf_intended_amount", amountInPesewas);
-        window.location.href = "../form/signup/index.html";
-        return;
+  /* Called when Pro or Elite button is clicked */
+  async function handlePlanClick(plan, amountInPesewas) {
+
+      try {
+
+          /* Check if user is logged in */
+          const { data: { user } } = await sb.auth.getUser();
+
+          if (!user) {
+
+              /* Save intended plan */
+              sessionStorage.setItem("bf_intended_plan", plan);
+              sessionStorage.setItem("bf_intended_amount", amountInPesewas);
+
+              window.location.href = "../form/signup/index.html";
+              return;
+          }
+
+          openPaystackPopup(user, plan, amountInPesewas);
+
+      } catch (err) {
+
+          console.error("Plan click error:", err);
+
+          showPaymentToast(
+              "Could not start payment process.",
+              false
+          );
+      }
+  }
+
+  /* Open Paystack popup */
+  function openPaystackPopup(user, plan, amountInPesewas) {
+
+      /* Safety checks */
+      if (!window.PaystackPop) {
+
+          showPaymentToast(
+              "Paystack failed to load.",
+              false
+          );
+
+          return;
       }
 
-      openPaystackPopup(user, plan, amountInPesewas);
-    }
+      if (!user || !user.email) {
 
-    /* Open Paystack payment popup */
-    function openPaystackPopup(user, plan, amountInPesewas) {
+          showPaymentToast(
+              "Please login again.",
+              false
+          );
+
+          return;
+      }
+
       const handler = PaystackPop.setup({
-        key:       PAYSTACK_PUBLIC_KEY,
-        email:     user.email,
-        amount:    amountInPesewas,  // in pesewas (GH₵ 39 = 3900 pesewas)
-        currency:  "GHS",
-        ref:       "BF-" + Date.now() + "-" + Math.floor(Math.random() * 1000000),
-        label:     "biggs fitness — " + plan.charAt(0).toUpperCase() + plan.slice(1),
-        metadata: {
-          custom_fields: [
-            { display_name: "Plan",    variable_name: "plan",    value: plan },
-            { display_name: "User ID", variable_name: "user_id", value: user.id }
-          ]
-        },
 
-        onClose: function () {
-          showPaymentToast("Payment cancelled.", false);
-        },
+          key: PAYSTACK_PUBLIC_KEY,
 
-        callback: async function (response) {
-          showPaymentToast("Verifying payment…", true);
+          email: user.email,
 
-          try {
-            const res = await fetch(`${BACKEND_URL}/api/payment/verify`, {
-              method:  "POST",
-              headers: { "Content-Type": "application/json" },
-              body:    JSON.stringify({
-                reference: response.reference,
-                user_id:   user.id,
-                plan:      plan
-              })
-            });
+          amount: amountInPesewas,
 
-            const data = await res.json();
+          currency: "GHS",
 
-            if (data.success) {
-              showPaymentToast(`🎉 Welcome to ${plan.charAt(0).toUpperCase() + plan.slice(1)}! Redirecting…`, true);
-              // Small delay so user sees the success message
-              setTimeout(() => {
-                window.location.href = "../dashboard/index.html";
-              }, 2000);
-            } else {
-              showPaymentToast(data.error || "Verification failed. Contact support.", false);
-            }
+          ref:
+              "BF-" +
+              Date.now() +
+              "-" +
+              Math.floor(Math.random() * 1000000),
 
-          } catch (err) {
-            console.error("Payment verify error:", err);
-            showPaymentToast("Server error. Please contact support with ref: " + response.reference, false);
+          metadata: {
+              custom_fields: [
+                  {
+                      display_name: "Plan",
+                      variable_name: "plan",
+                      value: plan
+                  },
+                  {
+                      display_name: "User ID",
+                      variable_name: "user_id",
+                      value: user.id
+                  }
+              ]
+          },
+
+          onClose: function () {
+
+              showPaymentToast(
+                  "Payment cancelled.",
+                  false
+              );
+          },
+
+          callback: function (response) {
+
+              verifyPayment(
+                  response,
+                  user,
+                  plan
+              );
           }
-        }
       });
 
       handler.openIframe();
-    }
+  }
 
-    /* If user just signed up after clicking a plan, pick up where they left off */
-    (async function checkIntendedPlan() {
-      const plan   = sessionStorage.getItem("bf_intended_plan");
-      const amount = sessionStorage.getItem("bf_intended_amount");
+  /* Verify payment */
+  async function verifyPayment(response, user, plan) {
+
+      showPaymentToast(
+          "Verifying payment...",
+          true
+      );
+
+      try {
+
+          const res = await fetch(
+              `${BACKEND_URL}/api/payment/verify`,
+              {
+                  method: "POST",
+
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify({
+                      reference: response.reference,
+                      user_id: user.id,
+                      plan: plan
+                  })
+              }
+          );
+
+          const data = await res.json();
+
+          if (data.success) {
+
+              showPaymentToast(
+                  `🎉 Welcome to ${plan.charAt(0).toUpperCase() + plan.slice(1)}! Redirecting...`,
+                  true
+              );
+
+              setTimeout(() => {
+
+                  window.location.href = "../dashboard/index.html";
+
+              }, 2000);
+
+          } else {
+
+              showPaymentToast(
+                  data.error || "Verification failed.",
+                  false
+              );
+          }
+
+      } catch (err) {
+
+          console.error(
+              "Payment verification error:",
+              err
+          );
+
+          showPaymentToast(
+              "Server error. Contact support.",
+              false
+          );
+      }
+  }
+
+  /* Resume intended plan after signup/login */
+  (async function checkIntendedPlan() {
+
+      const plan = sessionStorage.getItem(
+          "bf_intended_plan"
+      );
+
+      const amount = sessionStorage.getItem(
+          "bf_intended_amount"
+      );
+
       if (!plan || !amount) return;
 
       const { data: { user } } = await sb.auth.getUser();
+
       if (!user) return;
 
-      // Clear so it doesn't fire again
-      sessionStorage.removeItem("bf_intended_plan");
-      sessionStorage.removeItem("bf_intended_amount");
+      /* Clear storage */
+      sessionStorage.removeItem(
+          "bf_intended_plan"
+      );
 
-      // Small delay to let the page settle
+      sessionStorage.removeItem(
+          "bf_intended_amount"
+      );
+
       setTimeout(() => {
-        openPaystackPopup(user, plan, parseInt(amount));
+
+          openPaystackPopup(
+              user,
+              plan,
+              parseInt(amount)
+          );
+
       }, 800);
-    })();
+
+  })();
   </script>
   
   <script>

@@ -46,10 +46,10 @@ async function generateQuickSession() {
     const btn = document.getElementById("generateBtn");
 
     const { plan } = await getUserPlan();
- 
+
     // Starter: enforce 3 quick sessions per month cap
     if (plan === "starter") {
-        const { withinLimit, used, limit } = await checkMonthlyLimit(currentUser.id, "quick_session");
+        const { withinLimit } = await checkMonthlyLimit(currentUser.id, "quick_session");
         if (!withinLimit) {
             showUpgradeModal("pro", "Unlimited Quick Sessions");
             return;
@@ -61,9 +61,9 @@ async function generateQuickSession() {
 
     try {
         const res = await fetch("http://localhost:3000/api/ai/quick-session", {
-            method: "POST",
+            method:  "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+            body:    JSON.stringify({
                 fitness_level: currentProfile?.fitness_level || "beginner",
                 equipment:     currentProfile?.equipment     || "none"
             })
@@ -189,33 +189,22 @@ async function finishQuickSession() {
         completed_at: new Date()
     });
 
-    // update progress
+    // update progress — sessions/mins/calories ONLY
+    // streak and last_workout_date are intentionally NOT updated here
+    // those only update when the user completes a full planned workout
     const { data: progress } = await sb
         .from("progress")
-        .select("*")
+        .select("total_sessions, total_mins, total_calories")
         .eq("user_id", currentUser.id)
         .maybeSingle();
 
     if (progress) {
-        const today     = new Date().toDateString();
-        const lastDate  = progress.last_workout_date
-            ? new Date(progress.last_workout_date).toDateString()
-            : null;
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
-        const newStreak = lastDate === yesterday || lastDate === today
-            ? progress.streak + 1 : 1;
-
         await sb.from("progress").update({
-            total_sessions:    progress.total_sessions + 1,
-            total_mins:        progress.total_mins + duration,
-            total_calories:    progress.total_calories + calories,
-            streak:            newStreak,
-            longest_streak:    Math.max(newStreak, progress.longest_streak || 0),
-            last_workout_date: new Date(),
-            updated_at:        new Date()
+            total_sessions: (progress.total_sessions || 0) + 1,
+            total_mins:     (progress.total_mins     || 0) + duration,
+            total_calories: (progress.total_calories || 0) + calories,
+            updated_at:     new Date()
         }).eq("user_id", currentUser.id);
-
-        localStorage.setItem("bf_streak", newStreak);
     }
 
     // show done screen
@@ -282,11 +271,9 @@ async function fetchWithFallback(url, options, cacheKey) {
     try {
         const res  = await fetch(url, options);
         const data = await res.json();
-        // cache it for next time
         localStorage.setItem(cacheKey, JSON.stringify(data));
         return data;
     } catch {
-        // backend down — try cache
         const cached = localStorage.getItem(cacheKey);
         return cached ? JSON.parse(cached) : null;
     }

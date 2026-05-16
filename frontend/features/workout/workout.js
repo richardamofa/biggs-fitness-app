@@ -303,9 +303,17 @@ async function finishWorkout() {
             ? new Date(progress.last_workout_date).toDateString()
             : null;
         const yesterday     = new Date(Date.now() - 86400000).toDateString();
-        const newStreak     = lastDate === yesterday || lastDate === today
-            ? progress.streak + 1
-            : 1;
+        let newStreak;
+        if (lastDate === today) {
+            // already worked out today — keep streak as is, don't add
+            newStreak = progress.streak;
+        } else if (lastDate === yesterday) {
+            // worked out yesterday — continue streak
+            newStreak = progress.streak + 1;
+        } else {
+            // streak broken — start fresh
+            newStreak = 1;
+        }
         const longestStreak = Math.max(newStreak, progress.longest_streak || 0);
 
         await sb.from("progress").update({
@@ -317,6 +325,14 @@ async function finishWorkout() {
             last_workout_date: new Date(),
             updated_at:        new Date()
         }).eq("user_id", currentUser.id);
+
+        const { data: check } = await sb
+        .from("progress")
+        .select("total_sessions, streak")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+        console.log("Progress after update:", check);
 
         // keep streak in localStorage for topbar display
         localStorage.setItem("bf_streak", newStreak);

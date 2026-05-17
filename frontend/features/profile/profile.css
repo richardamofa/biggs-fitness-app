@@ -1,4 +1,4 @@
-/* ── Profile page ── */
+/* Profile page */
 
 .page-content {
     padding: 3.2rem;
@@ -189,3 +189,4 @@
     .profile-card { padding: 2rem; }
     .profile-save-btn { width: 100%; text-align: center; }
 }
+

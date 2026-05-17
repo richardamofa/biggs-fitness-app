@@ -1,4 +1,9 @@
 /* admin.js — load on every admin page */
+/* initializing supabase 
+const SUPABASE_URL = "https://ioyluedlmcfvayikudfd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Bm-mCRLQ6MBV_C-GMldd8A_QV0k70b1";
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);*/
 
 /* Your Supabase user ID — anyone NOT in this list gets kicked out */
 const ADMIN_IDS = [
@@ -67,6 +72,7 @@ window.addEventListener("unhandledrejection", (e) => {
 });
 
 /* Also log to Supabase error_logs table if it exists */
+
 /* Run this SQL first to enable Supabase logging:
    create table if not exists error_logs (
        id uuid primary key default gen_random_uuid(),

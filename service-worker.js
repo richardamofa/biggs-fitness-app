@@ -3,26 +3,7 @@ const OFFLINE_PAGE  = "/frontend/offline.html";
 
 /*  Assets to cache on install  */
 const STATIC_ASSETS = [
-    "/frontend/dashboard/index.html",
-    "/frontend/dashboard/dashboard.css",
-    "/frontend/dashboard/dashboard.js",
-    "/frontend/global.css",
-    "/frontend/form/supabase/supabase.js",
-    "/frontend/features/plans/index.html",
-    "/frontend/features/plans/plan.css",
-    "/frontend/features/workout/index.html",
-    "/frontend/features/workout/workout.css",
-    "/frontend/features/quick-suggestion/index.html",
-    "/frontend/features/quick-suggestion/quick.css",
-    "/frontend/features/progress/index.html",
-    "/frontend/features/progress/progress.css",
-    "/frontend/features/profile/index.html",
-    "/frontend/features/profile/profile.css",
-    "/frontend/features/coaches/index.html",
-    "/frontend/features/coaches/coaches.css",
-    "/frontend/assets/icons/icon-192.png",
-    "/frontend/assets/icons/icon-512.png",
-    OFFLINE_PAGE
+    "/frontend/offline.html"
 ];
 
 /*  Install: cache static assets  */

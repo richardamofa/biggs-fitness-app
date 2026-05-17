@@ -90,6 +90,16 @@
           <input type="text" id="coachTags" placeholder="muscle gain, beginner"/>
         </div>
         <div class="admin-form-field">
+        <label>Coach Photo</label>
+        <input type="file" id="coachPhoto" accept="image/*" />
+        <div class="admin-photo-preview" id="photoPreview" style="display:none;">
+            <img id="photoPreviewImg" src="" alt="Preview" />
+            <span id="photoPreviewName"></span>
+        </div>
+        <!-- shows current photo when editing -->
+        <p class="admin-current-photo" id="currentPhotoNote" style="display:none;font-size:1.2rem;color:rgba(240,237,232,0.4);"></p>
+        </div>
+        <div class="admin-form-field">
           <label>Emoji</label>
           <input type="text" id="coachEmoji" placeholder="💪" maxlength="4"/>
         </div>
@@ -150,8 +160,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
-<script src="../form/supabase/supabase.js"></script>
-<script src="./admin.js"></script>
+<script src="../../form/supabase/supabase.js"></script>
+<script src="../admin.js"></script>
 <script>
 let allCoaches = [];
 let deleteTargetId = null;
@@ -163,6 +173,22 @@ async function loadCoaches() {
   allCoaches = data || [];
   renderCoaches(allCoaches);
 }
+
+document.getElementById("coachPhoto").addEventListener("change", function () {
+    const file    = this.files[0];
+    const preview = document.getElementById("photoPreview");
+    const img     = document.getElementById("photoPreviewImg");
+    const name    = document.getElementById("photoPreviewName");
+
+    if (file) {
+        const url = URL.createObjectURL(file);
+        img.src          = url;
+        name.textContent = file.name;
+        preview.style.display = "flex";
+    } else {
+        preview.style.display = "none";
+    }
+});
 
 function renderCoaches(coaches) {
   const tbody = document.getElementById("coachesBody");
@@ -183,17 +209,15 @@ function renderCoaches(coaches) {
       <td>⭐ ${c.rating || 5.0} <span class="admin-muted">(${c.reviews || 0})</span></td>
       <td>${c.price || "—"}</td>
       <td>
-        <span class="admin-status-badge ${c.active ? 'active' : 'inactive'}">
+        <span class="admin-status-badge ${c.active ? "active" : "inactive"}">
           ${c.active ? "Active" : "Inactive"}
         </span>
       </td>
       <td>
         <div class="admin-action-btns">
-          <button class="admin-btn-icon edit" onclick="openModal('${c.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
-          <button class="admin-btn-icon toggle" onclick="toggleCoach('${c.id}', ${c.active})" title="${c.active ? 'Deactivate' : 'Activate'}">
-            <i class="fa-solid fa-${c.active ? 'eye-slash' : 'eye'}"></i>
-          </button>
-          <button class="admin-btn-icon delete" onclick="confirmDelete('${c.id}', '${c.name}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
+          <button class="admin-btn-icon edit"   onclick="openModal('${c.id}')"                           title="Edit"><i class="fa-solid fa-pen"></i></button>
+          <button class="admin-btn-icon toggle" onclick="toggleCoach('${c.id}', ${c.active})"            title="${c.active ? "Deactivate" : "Activate"}"><i class="fa-solid fa-${c.active ? "eye-slash" : "eye"}"></i></button>
+          <button class="admin-btn-icon delete" onclick="confirmDelete('${c.id}', '${c.name}')"          title="Delete"><i class="fa-solid fa-trash"></i></button>
         </div>
       </td>
     </tr>
@@ -212,29 +236,41 @@ function filterCoaches() {
 function openModal(id = null) {
   const overlay = document.getElementById("modalOverlay");
   const title   = document.getElementById("modalTitle");
+  const note    = document.getElementById("currentPhotoNote");
+
   document.getElementById("coachForm").reset();
   document.getElementById("coachFormNote").style.display = "none";
+  document.getElementById("photoPreview").style.display  = "none";
+  note.style.display = "none";
 
   if (id) {
     const c = allCoaches.find(x => x.id === id);
     if (!c) return;
+
     title.textContent = "Edit Coach";
     document.getElementById("coachId").value       = c.id;
-    document.getElementById("coachName").value     = c.name || "";
-    document.getElementById("coachTitle").value    = c.title || "";
-    document.getElementById("coachBio").value      = c.bio || "";
+    document.getElementById("coachName").value     = c.name     || "";
+    document.getElementById("coachTitle").value    = c.title    || "";
+    document.getElementById("coachBio").value      = c.bio      || "";
     document.getElementById("coachTags").value     = (c.tags || []).join(", ");
-    document.getElementById("coachEmoji").value    = c.emoji || "💪";
-    document.getElementById("coachPrice").value    = c.price || "";
-    document.getElementById("coachRating").value   = c.rating || 5.0;
-    document.getElementById("coachReviews").value  = c.reviews || 0;
+    document.getElementById("coachEmoji").value    = c.emoji    || "💪";
+    document.getElementById("coachPrice").value    = c.price    || "";
+    document.getElementById("coachRating").value   = c.rating   || 5.0;
+    document.getElementById("coachReviews").value  = c.reviews  || 0;
     document.getElementById("coachWhatsapp").value = c.whatsapp || "";
-    document.getElementById("coachEmail").value    = c.email || "";
-    document.getElementById("coachPhone").value    = c.phone || "";
+    document.getElementById("coachEmail").value    = c.email    || "";
+    document.getElementById("coachPhone").value    = c.phone    || "";
     document.getElementById("coachActive").checked = c.active;
+
+    // show current photo note only when editing
+    if (c.photo) {
+      note.textContent   = `Current photo: ${c.photo.split("/").pop()}`;
+      note.style.display = "block";
+    }
+
   } else {
     title.textContent = "Add Coach";
-    document.getElementById("coachId").value = "";
+    document.getElementById("coachId").value       = "";
     document.getElementById("coachActive").checked = true;
   }
 
@@ -246,46 +282,87 @@ function closeModal() {
 }
 
 async function saveCoach(e) {
-  e.preventDefault();
-  const btn  = document.getElementById("coachSaveBtn");
-  const note = document.getElementById("coachFormNote");
-  btn.textContent = "Saving...";
-  btn.disabled    = true;
+    e.preventDefault();
+    const btn  = document.getElementById("coachSaveBtn");
+    const note = document.getElementById("coachFormNote");
+    btn.textContent = "Saving...";
+    btn.disabled    = true;
 
-  const id = document.getElementById("coachId").value;
-  const payload = {
-    name:      document.getElementById("coachName").value.trim(),
-    title:     document.getElementById("coachTitle").value.trim(),
-    bio:       document.getElementById("coachBio").value.trim(),
-    tags:      document.getElementById("coachTags").value.split(",").map(t => t.trim()).filter(Boolean),
-    emoji:     document.getElementById("coachEmoji").value.trim() || "💪",
-    price:     document.getElementById("coachPrice").value.trim(),
-    rating:    parseFloat(document.getElementById("coachRating").value) || 5.0,
-    reviews:   parseInt(document.getElementById("coachReviews").value) || 0,
-    whatsapp:  document.getElementById("coachWhatsapp").value.trim(),
-    email:     document.getElementById("coachEmail").value.trim(),
-    phone:     document.getElementById("coachPhone").value.trim(),
-    active:    document.getElementById("coachActive").checked,
-  };
+    const id        = document.getElementById("coachId").value;
+    const fileInput = document.getElementById("coachPhoto");
+    const file      = fileInput.files[0];
 
-  let error;
-  if (id) {
-    ({ error } = await sb.from("coaches").update(payload).eq("id", id));
-  } else {
-    ({ error } = await sb.from("coaches").insert(payload));
-  }
+    let photoUrl = null;
 
-  if (error) {
-    note.textContent   = "Error: " + error.message;
-    note.style.display = "block";
-    note.style.color   = "#ff2c2c";
-  } else {
-    closeModal();
-    loadCoaches();
-  }
+    // editing with no new file — keep existing photo
+    if (id && !file) {
+        const existing = allCoaches.find(c => c.id === id);
+        photoUrl = existing?.photo || null;
+    }
 
-  btn.textContent = "Save Coach";
-  btn.disabled    = false;
+    // upload new photo if selected
+    if (file) {
+        btn.textContent = "Uploading photo...";
+
+        const ext      = file.name.split(".").pop();
+        const fileName = `coach-${Date.now()}.${ext}`;
+
+        const { error: uploadError } = await sb.storage
+            .from("coach-photos")
+            .upload(fileName, file, { upsert: true });
+
+        if (uploadError) {
+            note.textContent   = "Photo upload failed: " + uploadError.message;
+            note.style.display = "block";
+            note.style.color   = "#ff2c2c";
+            btn.textContent    = "Save Coach";
+            btn.disabled       = false;
+            return;
+        }
+
+        const { data: urlData } = sb.storage
+            .from("coach-photos")
+            .getPublicUrl(fileName);
+
+        photoUrl = urlData.publicUrl;
+    }
+
+    btn.textContent = "Saving...";
+
+    const payload = {
+        name:     document.getElementById("coachName").value.trim(),
+        title:    document.getElementById("coachTitle").value.trim(),
+        bio:      document.getElementById("coachBio").value.trim(),
+        tags:     document.getElementById("coachTags").value.split(",").map(t => t.trim()).filter(Boolean),
+        emoji:    document.getElementById("coachEmoji").value.trim() || "💪",
+        price:    document.getElementById("coachPrice").value.trim(),
+        rating:   parseFloat(document.getElementById("coachRating").value) || 5.0,
+        reviews:  parseInt(document.getElementById("coachReviews").value)  || 0,
+        whatsapp: document.getElementById("coachWhatsapp").value.trim(),
+        email:    document.getElementById("coachEmail").value.trim(),
+        phone:    document.getElementById("coachPhone").value.trim(),
+        active:   document.getElementById("coachActive").checked,
+        photo:    photoUrl,
+    };
+
+    let error;
+    if (id) {
+        ({ error } = await sb.from("coaches").update(payload).eq("id", id));
+    } else {
+        ({ error } = await sb.from("coaches").insert(payload));
+    }
+
+    if (error) {
+        note.textContent   = "Error: " + error.message;
+        note.style.display = "block";
+        note.style.color   = "#ff2c2c";
+    } else {
+        closeModal();
+        loadCoaches();
+    }
+
+    btn.textContent = "Save Coach";
+    btn.disabled    = false;
 }
 
 async function toggleCoach(id, currentActive) {

@@ -402,6 +402,7 @@ if (overlay) {
     });
 }
 
+
 /* Logout */
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {

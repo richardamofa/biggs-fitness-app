@@ -126,6 +126,12 @@ async function loadDashboard() {
     }
 
     await checkNewGoogleUser(user);
+    
+    const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    if (ADMIN_IDS.includes(user.id)) {
+        const adminNavItem = document.getElementById("adminNavItem");
+        if (adminNavItem) adminNavItem.style.display = "flex";
+    }
 
     const [profileRes, progressRes, planRes] = await Promise.all([
         sb.from("profiles").select("*").eq("user_id", user.id).maybeSingle(),

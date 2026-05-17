@@ -262,6 +262,7 @@ async function fetchWithFallback(url, options, cacheKey) {
     }
 }
 
+
 /* Logout */
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {

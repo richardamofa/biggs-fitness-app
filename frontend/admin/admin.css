@@ -602,3 +602,11 @@ input[type="file"]:hover {
     .admin-content { padding: 2rem; }
     .admin-form-row { grid-template-columns: 1fr; }
 }
+.admin-coach-photo {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,44,44,0.3);
+    flex-shrink: 0;
+}

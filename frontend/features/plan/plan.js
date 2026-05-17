@@ -37,6 +37,12 @@ async function initPlans() {
         return;
     }
 
+        const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    if (ADMIN_IDS.includes(user.id)) {
+        const adminNavItem = document.getElementById("adminNavItem");
+        if (adminNavItem) adminNavItem.style.display = "flex";
+    }
+
     currentUser = user;
 
     // load profile for prefilling form

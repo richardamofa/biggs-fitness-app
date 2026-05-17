@@ -200,13 +200,16 @@ function renderCoaches(coaches) {
     <tr>
       <td>
         <div class="admin-coach-cell">
-          <span class="admin-coach-emoji">${c.emoji || "💪"}</span>
-          <span>${c.name}</span>
+            ${c.photo
+            ? `<img src="${c.photo}" alt="${c.name}" class="admin-coach-photo" />`
+            : `<span class="admin-coach-emoji">${c.emoji || "💪"}</span>`
+            }
+            <span>${c.name}</span>
         </div>
       </td>
       <td class="admin-muted">${c.title || "—"}</td>
       <td>${(c.tags || []).map(t => `<span class="coach-tag">${t}</span>`).join("")}</td>
-      <td>⭐ ${c.rating || 5.0} <span class="admin-muted">(${c.reviews || 0})</span></td>
+      <td><i class="fa-solid fa-star" style="color: gold;"></i> ${c.rating || 5.0} <span class="admin-muted">(${c.reviews || 0})</span></td>
       <td>${c.price || "—"}</td>
       <td>
         <span class="admin-status-badge ${c.active ? "active" : "inactive"}">
@@ -309,7 +312,11 @@ async function saveCoach(e) {
 
         const { error: uploadError } = await sb.storage
             .from("coach-photos")
-            .upload(fileName, file, { upsert: true });
+            .upload(fileName, file, { 
+                upsert: true ,
+                contentType: file.type
+            });
+            
 
         if (uploadError) {
             note.textContent   = "Photo upload failed: " + uploadError.message;

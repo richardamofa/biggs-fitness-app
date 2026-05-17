@@ -140,7 +140,7 @@ function renderUsers(users) {
       <td class="admin-muted">${u.goal || "—"}</td>
       <td><span class="admin-plan-badge plan-${u.plan || 'starter'}">${u.plan || "starter"}</span></td>
       <td>${u.sessions}</td>
-      <td>${u.streak} 🔥</td>
+      <td><span class="admin-streak">${u.streak} <i class="fa-solid fa-fire" style="color:#ff6b35;margin-left:0.4rem;"></i></span></td>
       <td>${new Date(u.created_at).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })}</td>
       <td>
         <button class="admin-btn-icon edit" onclick="openUserModal('${u.user_id}')" title="View"><i class="fa-solid fa-eye"></i></button>

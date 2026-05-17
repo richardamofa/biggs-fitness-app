@@ -22,6 +22,12 @@ async function initCoaches() {
         return;
     }
 
+    const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    if (ADMIN_IDS.includes(user.id)) {
+        const adminNavItem = document.getElementById("adminNavItem");
+        if (adminNavItem) adminNavItem.style.display = "flex";
+    }
+
     const cachedName = localStorage.getItem("bf_user_name");
     const el = document.getElementById("topbarAvatar");
     if (el && cachedName) el.textContent = cachedName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);

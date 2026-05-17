@@ -22,6 +22,12 @@ async function initProgress() {
         return;
     }
 
+        const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    if (ADMIN_IDS.includes(user.id)) {
+        const adminNavItem = document.getElementById("adminNavItem");
+        if (adminNavItem) adminNavItem.style.display = "flex";
+    }
+
     // pull progress and sessions in parallel
     const [progressRes, sessionsRes] = await Promise.all([
         sb.from("progress").select("*").eq("user_id", user.id).maybeSingle(),
@@ -153,38 +159,6 @@ async function fetchWithFallback(url, options, cacheKey) {
         return cached ? JSON.parse(cached) : null;
     }
 }
-
-function logError(message, source = "", type = "error", stack = "") {
-    const logs = JSON.parse(localStorage.getItem("bf_admin_logs") || "[]");
-
-    logs.unshift({
-        id:      Date.now(),
-        type,    // "error" | "warn" | "info"
-        message: String(message),
-        source:  String(source),
-        stack:   String(stack),
-        time:    new Date().toISOString()
-    });
-
-    // keep max 500 logs
-    if (logs.length > 500) logs.splice(500);
-
-    localStorage.setItem("bf_admin_logs", JSON.stringify(logs));
-}
-
-/* Auto-catch global JS errors and log them */
-window.addEventListener("error", (e) => {
-    logError(e.message, e.filename + ":" + e.lineno, "error", e.error?.stack || "");
-});
-
-window.addEventListener("unhandledrejection", (e) => {
-    logError(
-        e.reason?.message || String(e.reason),
-        "unhandledrejection",
-        "error",
-        e.reason?.stack || ""
-    );
-});
 
 
 /*Logout*/

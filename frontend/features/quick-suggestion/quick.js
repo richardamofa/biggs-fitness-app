@@ -39,6 +39,12 @@ async function initQuickSession() {
         .maybeSingle();
 
     currentProfile = profile;
+
+        const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    if (ADMIN_IDS.includes(user.id)) {
+        const adminNavItem = document.getElementById("adminNavItem");
+        if (adminNavItem) adminNavItem.style.display = "flex";
+    }
 }
 
 /* Generate quick session from backend */

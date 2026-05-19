@@ -33,10 +33,7 @@ self.addEventListener("fetch", event => {
     const { request } = event;
     const url = new URL(request.url);
 
-    // skip non-GET and cross-origin requests (Supabase, Groq, CDN)
-    if (request.method !== "GET" || url.origin !== location.origin) {
-        return;
-    }
+    if (request.method !== "GET" || url.origin !== location.origin) return;
 
     event.respondWith(
         caches.match(request).then(cached => {
@@ -44,12 +41,11 @@ self.addEventListener("fetch", event => {
 
             return fetch(request)
                 .then(response => {
-                    // cache successful responses for HTML and CSS
                     if (
                         response.ok &&
                         (request.destination === "document" ||
-                         request.destination === "style" ||
-                         request.destination === "script" ||
+                         request.destination === "style"    ||
+                         request.destination === "script"   ||
                          request.destination === "image")
                     ) {
                         const clone = response.clone();
@@ -58,10 +54,11 @@ self.addEventListener("fetch", event => {
                     return response;
                 })
                 .catch(() => {
-                    // offline — serve offline page for navigation requests
                     if (request.destination === "document") {
-                        return caches.match(OFFLINE_PAGE);
+                        return caches.match(OFFLINE_PAGE)
+                            .then(r => r || new Response("Offline", { status: 503 }));
                     }
+                    return new Response("", { status: 503 });
                 });
         })
     );

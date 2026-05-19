@@ -88,6 +88,46 @@ async function loadWorkoutExercises(userId, dayIndex, workoutName) {
 function getDefaultExercises(workoutName) {
     const name = workoutName?.toLowerCase() || "";
 
+    // if no equipment, always return bodyweight exercises
+    // regardless of workout type
+    if (equipment === "none") {
+        if (name.includes("push") || name.includes("chest") || name.includes("upper")) return [
+            { name: "Push Ups",           sets: 4, reps: "12",     rest: "45s" },
+            { name: "Wide Push Ups",      sets: 3, reps: "12",     rest: "45s" },
+            { name: "Diamond Push Ups",   sets: 3, reps: "10",     rest: "45s" },
+            { name: "Pike Push Ups",      sets: 3, reps: "10",     rest: "45s" },
+            { name: "Tricep Dips",        sets: 3, reps: "12",     rest: "45s" },
+            { name: "Plank",              sets: 3, reps: "45 sec", rest: "30s" },
+        ];
+        if (name.includes("pull") || name.includes("back")) return [
+            { name: "Superman Hold",      sets: 4, reps: "30 sec", rest: "30s" },
+            { name: "Reverse Snow Angel", sets: 3, reps: "15",     rest: "30s" },
+            { name: "Prone Y Raises",     sets: 3, reps: "12",     rest: "30s" },
+            { name: "Bodyweight Row",     sets: 3, reps: "10",     rest: "45s" },
+            { name: "Glute Bridge",       sets: 3, reps: "15",     rest: "30s" },
+            { name: "Dead Bug",           sets: 3, reps: "10",     rest: "30s" },
+        ];
+        if (name.includes("leg") || name.includes("lower")) return [
+            { name: "Bodyweight Squats",  sets: 4, reps: "15",     rest: "45s" },
+            { name: "Lunges",             sets: 3, reps: "10 each",rest: "45s" },
+            { name: "Glute Bridges",      sets: 4, reps: "15",     rest: "30s" },
+            { name: "Wall Sit",           sets: 3, reps: "45 sec", rest: "45s" },
+            { name: "Calf Raises",        sets: 4, reps: "20",     rest: "30s" },
+            { name: "Jump Squats",        sets: 3, reps: "12",     rest: "45s" },
+        ];
+        // default bodyweight full body for anything else
+        return [
+            { name: "Push Ups",           sets: 3, reps: "12",     rest: "45s" },
+            { name: "Bodyweight Squats",  sets: 3, reps: "15",     rest: "45s" },
+            { name: "Plank",              sets: 3, reps: "45 sec", rest: "30s" },
+            { name: "Lunges",             sets: 3, reps: "10 each",rest: "45s" },
+            { name: "Mountain Climbers",  sets: 3, reps: "20",     rest: "30s" },
+            { name: "Glute Bridges",      sets: 3, reps: "15",     rest: "30s" },
+        ];
+    }
+
+    // equipment available — use existing logic
+
     if (name.includes("push")) return [
         { name: "Push Ups",          sets: 4, reps: "12",      rest: "45s" },
         { name: "Dumbbell Press",    sets: 4, reps: "10",      rest: "60s" },

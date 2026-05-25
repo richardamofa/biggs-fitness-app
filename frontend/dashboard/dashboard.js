@@ -71,7 +71,9 @@ function updateTodayBanner(days) {
     const todayDay = days[todayIdx];
     if (!todayDay) return;
 
-    const rest = isRestDay(todayDay.workout);
+    const rest         = isRestDay(todayDay.workout);
+    const lastWorkout  = localStorage.getItem("bf_last_workout_date");
+    const workedOutToday = lastWorkout === new Date().toDateString();
 
     document.getElementById("todayTitle").textContent = todayDay.workout;
     document.getElementById("todayMeta").textContent  = rest
@@ -82,14 +84,35 @@ function updateTodayBanner(days) {
     if (!startBtn) return;
 
     if (rest) {
+        // rest day — disabled
         startBtn.textContent         = "Rest Day 🛌";
         startBtn.style.pointerEvents = "none";
         startBtn.style.opacity       = "0.4";
         startBtn.removeAttribute("href");
+
+    } else if (workedOutToday) {
+        // already worked out today — celebrate and lock
+        const doneMessages = [
+            "Done for today 💪🏾",
+            "Crushed it today ✓",
+            "Workout complete 🎉",
+            "You showed up today ✓",
+            "Beast mode: done 🔥",
+        ];
+        const msg = doneMessages[Math.floor(Math.random() * doneMessages.length)];
+
+        startBtn.textContent         = msg;
+        startBtn.style.pointerEvents = "none";
+        startBtn.style.opacity       = "0.5";
+        startBtn.style.cursor        = "default";
+        startBtn.removeAttribute("href");
+
     } else {
+        // workout day, not done yet — active
         startBtn.textContent         = "Start Workout →";
         startBtn.style.pointerEvents = "";
         startBtn.style.opacity       = "";
+        startBtn.style.cursor        = "";
         startBtn.href = `../features/workout/index.html?workout=${encodeURIComponent(todayDay.workout)}&day=${todayIdx}`;
     }
 }
@@ -119,7 +142,7 @@ async function checkNewGoogleUser(user) {
         });
         localStorage.setItem("bf_user_name", name);
         window.location.href = "../onboarding/index.html";
-        return true; // FIX 1: signal that a redirect happened
+        return true;
     }
     return false;
 }
@@ -134,8 +157,6 @@ async function loadDashboard() {
         return;
     }
 
-    // FIX 1: return early if checkNewGoogleUser redirected — stops
-    // the rest of loadDashboard running while navigation is in flight
     const redirected = await checkNewGoogleUser(user);
     if (redirected) return;
 
@@ -194,7 +215,7 @@ async function loadDashboard() {
     updateTodayBanner(days);
 }
 
-/* Sidebar toggle — FIX 2: null guards so missing elements don't crash */
+/* Sidebar toggle */
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 const menuBtn = document.getElementById("menuToggle");
@@ -229,7 +250,7 @@ async function fetchWithFallback(url, options, cacheKey) {
     }
 }
 
-/* Logout — FIX 3: null guard */
+/* Logout */
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {

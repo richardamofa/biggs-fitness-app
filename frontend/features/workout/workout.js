@@ -73,7 +73,6 @@ function showRestDayScreen() {
     const container = document.getElementById("workoutContainer");
     if (!container) return;
 
-    // hide progress bar — not needed on rest days
     const progressWrap = document.getElementById("progressWrap");
     if (progressWrap) progressWrap.style.display = "none";
 
@@ -142,10 +141,9 @@ async function initWorkout() {
     let   workoutName = params.get("workout");
     let   dayIndex    = params.get("day");
 
-    // FIX: no URL params means user came from sidebar nav
-    // Detect today's actual workout from their saved plan
+    // no URL params — user came from sidebar nav, detect today's workout
     if (!workoutName) {
-        const todayIdx = (new Date().getDay() + 6) % 7; // Mon=0 ... Sun=6
+        const todayIdx = (new Date().getDay() + 6) % 7;
 
         const { data: planRow } = await sb
             .from("plans")
@@ -165,7 +163,7 @@ async function initWorkout() {
             { workout: "Rest",      exercises: 0, duration: 0  },
         ];
 
-        const days    = planRow?.plan_data?.days || DEFAULT_PLAN;
+        const days     = planRow?.plan_data?.days || DEFAULT_PLAN;
         const todayDay = days[todayIdx];
 
         workoutName = todayDay?.workout || "Today's Workout";
@@ -175,7 +173,6 @@ async function initWorkout() {
     const titleEl = document.getElementById("workoutTitle");
     if (titleEl) titleEl.textContent = workoutName;
 
-    // rest day check — works whether params came from URL or were auto-detected
     const isRestDay = workoutName?.toLowerCase().includes("rest");
 
     if (isRestDay) {
@@ -376,9 +373,11 @@ function renderExercises() {
     const container = document.getElementById("exerciseList");
     if (!container) return;
 
-    // show progress bar only on actual workout days
-    const progressWrap = document.getElementById("progressWrap");
-    if (progressWrap) progressWrap.style.display = "block";
+    // show progress bar and set initial label e.g. "0 / 6 done"
+    const progressWrap  = document.getElementById("progressWrap");
+    const progressLabel = document.getElementById("progressLabel");
+    if (progressWrap)  progressWrap.style.display  = "block";
+    if (progressLabel) progressLabel.textContent   = `0 / ${exercises.length} done`;  // FIX 1
 
     container.innerHTML = exercises.map((ex, i) => `
         <div class="exercise-card" id="ex-${i}">
@@ -427,12 +426,13 @@ function completeExercise(index) {
 
     completedCount++;
 
-    const progress = document.getElementById("workoutProgress");
-    if (progress) {
-        const pct = Math.round((completedCount / exercises.length) * 100);
-        progress.style.width = pct + "%";
-        progress.textContent = pct + "%";
-    }
+    // FIX 2: update fill bar width AND the "X / Y done" label separately
+    const progressFill  = document.getElementById("workoutProgress");
+    const progressLabel = document.getElementById("progressLabel");
+    const pct           = Math.round((completedCount / exercises.length) * 100);
+
+    if (progressFill)  progressFill.style.width      = pct + "%";        // width only, no textContent
+    if (progressLabel) progressLabel.textContent     = `${completedCount} / ${exercises.length} done`;
 
     if (completedCount >= exercises.length) {
         setTimeout(finishWorkout, 600);

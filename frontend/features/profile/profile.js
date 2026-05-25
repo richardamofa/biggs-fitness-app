@@ -23,7 +23,7 @@ async function initProfile() {
         return;
     }
 
-        const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+        const ADMIN_IDS = ["01261b8b-00f2-4f60-b22e-965a6336b6ac"];
     if (ADMIN_IDS.includes(user.id)) {
         const adminNavItem = document.getElementById("adminNavItem");
         if (adminNavItem) adminNavItem.style.display = "flex";

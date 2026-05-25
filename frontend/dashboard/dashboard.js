@@ -50,10 +50,10 @@ function renderWeek(days) {
         const rest = isRestDay(d.workout);
         let tag, tagClass;
 
-        if (i < todayIdx)      { tag = "Done";   tagClass = "tag-done"; }
-        else if (i === todayIdx){ tag = "Today";  tagClass = "tag-today"; }
-        else if (rest)          { tag = "Rest";   tagClass = "tag-rest"; }
-        else                    { tag = "Coming"; tagClass = "tag-upcoming"; }
+        if (i < todayIdx)       { tag = "Done";   tagClass = "tag-done"; }
+        else if (i === todayIdx) { tag = "Today";  tagClass = "tag-today"; }
+        else if (rest)           { tag = "Rest";   tagClass = "tag-rest"; }
+        else                     { tag = "Coming"; tagClass = "tag-upcoming"; }
 
         return `
             <div class="week-day-row ${i === todayIdx ? "today" : ""} ${i < todayIdx ? "done" : ""}">
@@ -102,17 +102,26 @@ async function checkNewGoogleUser(user) {
     if (!profile) {
         const name = user.user_metadata?.full_name || user.email.split("@")[0];
         await sb.from("profiles").insert({
-            user_id: user.id, full_name: name,
-            fitness_level: "beginner", goal: "stay active",
-            equipment: "none", days_per_week: 4
+            user_id:       user.id,
+            full_name:     name,
+            fitness_level: "beginner",
+            goal:          "stay active",
+            equipment:     "none",
+            days_per_week: 4
         });
         await sb.from("progress").insert({
-            user_id: user.id, streak: 0, longest_streak: 0,
-            total_sessions: 0, total_mins: 0, total_calories: 0
+            user_id:        user.id,
+            streak:         0,
+            longest_streak: 0,
+            total_sessions: 0,
+            total_mins:     0,
+            total_calories: 0
         });
         localStorage.setItem("bf_user_name", name);
         window.location.href = "../onboarding/index.html";
+        return true; // FIX 1: signal that a redirect happened
     }
+    return false;
 }
 
 /* Load dashboard */
@@ -125,9 +134,12 @@ async function loadDashboard() {
         return;
     }
 
-    await checkNewGoogleUser(user);
-    
-    const ADMIN_IDS = ["dc8dac26-975b-4861-b313-49ac1efc22f3"];
+    // FIX 1: return early if checkNewGoogleUser redirected — stops
+    // the rest of loadDashboard running while navigation is in flight
+    const redirected = await checkNewGoogleUser(user);
+    if (redirected) return;
+
+    const ADMIN_IDS = ["01261b8b-00f2-4f60-b22e-965a6336b6ac"];
     if (ADMIN_IDS.includes(user.id)) {
         const adminNavItem = document.getElementById("adminNavItem");
         if (adminNavItem) adminNavItem.style.display = "flex";
@@ -177,25 +189,28 @@ async function loadDashboard() {
         document.getElementById("statGoals").textContent    = "Get Started";
     }
 
-    // use saved plan or fall back to default — both go through same render path
     const days = planRow?.plan_data?.days || DEFAULT_PLAN;
     renderWeek(days);
     updateTodayBanner(days);
 }
 
-/* Sidebar toggle */
+/* Sidebar toggle — FIX 2: null guards so missing elements don't crash */
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 const menuBtn = document.getElementById("menuToggle");
 
-menuBtn.addEventListener("click", () => {
-    sidebar.classList.add("open");
-    overlay.classList.add("open");
-});
-overlay.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    overlay.classList.remove("open");
-});
+if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.add("open");
+        overlay.classList.add("open");
+    });
+}
+if (overlay) {
+    overlay.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+    });
+}
 
 /* Offline fallback helper */
 async function fetchWithFallback(url, options, cacheKey) {
@@ -203,26 +218,26 @@ async function fetchWithFallback(url, options, cacheKey) {
         const cached = localStorage.getItem(cacheKey);
         return cached ? JSON.parse(cached) : null;
     }
-
     try {
         const res  = await fetch(url, options);
         const data = await res.json();
-        // cache it for next time
         localStorage.setItem(cacheKey, JSON.stringify(data));
         return data;
     } catch {
-        // backend down — try cache
         const cached = localStorage.getItem(cacheKey);
         return cached ? JSON.parse(cached) : null;
     }
 }
 
-/* Logout */
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await sb.auth.signOut();
-    localStorage.removeItem("bf_user_name");
-    window.location.href = "../form/login/index.html";
-});
+/* Logout — FIX 3: null guard */
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+        await sb.auth.signOut();
+        localStorage.removeItem("bf_user_name");
+        window.location.href = "../form/login/index.html";
+    });
+}
 
 /* Init */
 loadDashboard();

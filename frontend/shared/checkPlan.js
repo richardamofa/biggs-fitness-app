@@ -3,7 +3,7 @@ Load AFTER supabase.js on any feature page. */
 
 // free access list — user IDs here
 const FREE_ACCESS = [
-    "f111610a-ee2d-4852-8fa5-9fb50640a54d"
+    "01261b8b-00f2-4f60-b22e-965a6336b6ac"
 ];
 
 async function getUserPlan() {

@@ -3,7 +3,7 @@
 
 /* Your Supabase user ID — anyone NOT in this list gets kicked out */
 const ADMIN_IDS = [
-    "dc8dac26-975b-4861-b313-49ac1efc22f3" 
+    "01261b8b-00f2-4f60-b22e-965a6336b6ac" 
 ];
 
 /* Auth guard */

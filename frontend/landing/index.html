@@ -11,7 +11,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="../global.css" />
-  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href=".index.css" />
 
   <!--fontawesome -->
   <link rel="stylesheet"
@@ -521,7 +521,7 @@
 
   <script>
   const PAYSTACK_PUBLIC_KEY = "pk_test_83a771cba48462ebca51aee8b8469284d2019eae";
-  const BACKEND_URL = "http://localhost:3000";
+  const BACKEND_URL = "http://https://biggs-fitness-backend.onrender.com";
 
   /* Show toast notification */
   function showPaymentToast(msg, success = true) {
@@ -769,7 +769,7 @@
       btn.disabled = true;
 
       try {
-          const res = await fetch('http://localhost:3000/api/contact', {
+          const res = await fetch('http://https://biggs-fitness-backend.onrender.com/api/contact', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ name, email, subject, message })

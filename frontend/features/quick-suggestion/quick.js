@@ -66,7 +66,7 @@ async function generateQuickSession() {
     btn.disabled    = true;
 
     try {
-        const res = await fetch("http://localhost:3000/api/ai/quick-session", {
+        const res = await fetch("http://https://biggs-fitness-backend.onrender.com/api/ai/quick-session", {
             method:  "POST",
             headers: { "Content-Type": "application/json" },
             body:    JSON.stringify({

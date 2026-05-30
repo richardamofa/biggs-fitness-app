@@ -140,7 +140,7 @@ async function generatePlan() {
     btn.disabled    = true;
 
     const data = await fetchWithFallback(
-        "http://localhost:3000/api/ai/generate-plan",
+        "http://https://biggs-fitness-backend.onrender.com/api/ai/generate-plan",
         {
             method:  "POST",
             headers: { "Content-Type": "application/json" },

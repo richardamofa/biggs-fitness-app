@@ -90,7 +90,7 @@ async function saveAndFinish() {
     btn.textContent = "Building your first plan...";
 
     try {
-        const res = await fetch("http://localhost:3000/api/ai/generate-plan", {
+        const res = await fetch("http://https://biggs-fitness-backend.onrender.com/api/ai/generate-plan", {
             method:  "POST",
             headers: { "Content-Type": "application/json" },
             body:    JSON.stringify({

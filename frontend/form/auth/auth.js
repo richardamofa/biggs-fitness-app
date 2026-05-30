@@ -134,8 +134,7 @@ async function signInWithGoogle() {
     const { error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'http://127.0.0.1:5500/frontend/dashboard/index.html'
-            // update this when you deploy to Netlify/Vercel
+            redirectTo: 'http://biggs-fitness.netlify.app/dashboard/index.html'
         }
     });
     if (error) showToast(error.message);

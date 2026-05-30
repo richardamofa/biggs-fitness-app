@@ -1,9 +1,9 @@
 const CACHE_NAME    = "biggs-fitness-v1";
-const OFFLINE_PAGE  = "/frontend/offline.html";
+const OFFLINE_PAGE  = "/offline.html";
 
 /*  Assets to cache on install  */
 const STATIC_ASSETS = [
-    "/frontend/offline.html"
+    "/offline.html"
 ];
 
 /*  Install: cache static assets  */

@@ -1,21 +1,35 @@
 import "dotenv/config";
 
-import express          from "express";
-import cors             from "cors";
-import aiRoutes         from "./routes/ai.js";
-import contactRoutes    from "./routes/contact.js";
-import paymentRoutes    from "./routes/payment.js";
+import cors from "cors";
+import express from "express";
+import aiRoutes from "./routes/ai.js";
+import contactRoutes from "./routes/contact.js";
+import paymentRoutes from "./routes/payment.js";
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
 /* Middleware */
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "*",
-    methods: ["GET", "POST"],
+    origin: function(origin, callback) {
+        const allowed = [
+            "http://127.0.0.1:5500",
+            "http://localhost:5500",
+            process.env.FRONTEND_URL
+        ].filter(Boolean);
+
+        // allow requests with no origin (mobile apps, Postman etc)
+        if (!origin) return callback(null, true);
+
+        if (allowed.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    methods:      ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
-app.use(express.json());
 
 /* Routes */
 app.use("/api/ai",      aiRoutes);

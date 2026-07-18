@@ -132,14 +132,16 @@ if (loginForm) {
 /* GOOGLE AUTH */
 async function signInWithGoogle() {
     const { error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: {
-            redirectTo: 'http://biggs-fitness.netlify.app/dashboard/index.html'
+            redirectTo: "http://127.0.0.1:5500/frontend/dashboard/index.html"
         }
     });
-    if (error) showToast(error.message);
-}
 
+    if (error) {
+        showToast(error.message);
+    }
+}
 /* LOGOUT */
 async function logout() {
     await sb.auth.signOut();

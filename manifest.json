@@ -2,7 +2,7 @@
   "name": "biggs fitness",
   "short_name": "biggs",
   "description": "Simple AI-powered fitness tracking, workout plans and 1-on-1 coaching.",
-  "start_url": "/dashboard/index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
